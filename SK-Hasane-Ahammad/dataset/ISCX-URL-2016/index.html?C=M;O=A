@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /CICDataset/ISCX-URL-2016/Dataset</title>
+ </head>
+ <body>
+<h1>Index of /CICDataset/ISCX-URL-2016/Dataset</h1>
+  <table>
+   <tr><th valign="top"><img src="/icons/blank.gif" alt="[ICO]"></th><th><a href="?C=N;O=A">Name</a></th><th><a href="?C=M;O=D">Last modified</a></th><th><a href="?C=S;O=A">Size</a></th><th><a href="?C=D;O=A">Description</a></th></tr>
+   <tr><th colspan="5"><hr></th></tr>
+<tr><td valign="top"><img src="/icons/back.gif" alt="[PARENTDIR]"></td><td><a href="/CICDataset/ISCX-URL-2016/">Parent Directory</a></td><td>&nbsp;</td><td align="right">  - </td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="All.csv">All.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right"> 11M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="All_BestFirst.csv">All_BestFirst.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">1.2M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="All_BestFirst_test.csv">All_BestFirst_test.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">1.0M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="All_Infogain.csv">All_Infogain.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">2.5M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="All_Infogain_test.csv">All_Infogain_test.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">2.6M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Defacement.csv">Defacement.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">4.8M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Defacement_BestFirst.csv">Defacement_BestFirst.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">812K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Defacement_Infogain.csv">Defacement_Infogain.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">1.5M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Defacement_Infogain_test.csv">Defacement_Infogain_test.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">1.4M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Malware.csv">Malware.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">4.3M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Malware_BestFirst.csv">Malware_BestFirst.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">1.1M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Malware_Infogain.csv">Malware_Infogain.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">668K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Malware_Infogain_test.csv">Malware_Infogain_test.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">591K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Phishing.csv">Phishing.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">4.4M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Phishing_BestFirst.csv">Phishing_BestFirst.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">1.7M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Phishing_Infogain.csv">Phishing_Infogain.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">1.2M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Phishing_Infogain_test.csv">Phishing_Infogain_test.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">806K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Spam.csv">Spam.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">4.4M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Spam_BestFirst.csv">Spam_BestFirst.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">259K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Spam_BestFirst_test.csv">Spam_BestFirst_test.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">498K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Spam_Infogain.csv">Spam_Infogain.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">581K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Spam_Infogain_test.csv">Spam_Infogain_test.csv</a></td><td align="right">2024-02-01 18:32  </td><td align="right">260K</td><td>&nbsp;</td></tr>
+   <tr><th colspan="5"><hr></th></tr>
+</table>
+<address>Apache/2.4.41 (Ubuntu) Server at 205.174.165.80 Port 80</address>
+</body></html>
