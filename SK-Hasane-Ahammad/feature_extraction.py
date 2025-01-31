@@ -13,25 +13,26 @@ import re
 
 # load phishing URLs
 data0 = pd.read_csv("dataset/PhishTank-verified_online.csv")
-data0.head()
-data0.shape
+print(data0.head())
+print(data0.shape)
 
 # choose 5000 phishing URLs randomly
 phishurl = data0.sample(n = 5000, random_state = 12).copy()
 phishurl = phishurl.reset_index(drop=True)
-phishurl.head()
-phishurl.shape
+print(phishurl.head())
+print(phishurl.shape)
 
 # load legitimate URLs
 data1 = pd.read_csv("dataset/Benign_list_big_final.csv")
 data1.columns = ['URLs']
-data1.head()
+print(data1.head())
+print(data1.shape)
 
 # choose 5000 legitimate URLs randomly
 legiurl = data1.sample(n = 5000, random_state = 12).copy()
 legiurl = legiurl.reset_index(drop=True)
-legiurl.head()
-legiurl.shape
+print(legiurl.head())
+print(legiurl.shape)
 
 # -- feature extraction --
 
@@ -266,7 +267,7 @@ def featureExtraction(url,label):
     return features
 
 # extract features from legitimate URLs
-legiurl.shape
+print(legiurl.shape)
 legi_features = []
 label = 0
 
@@ -279,11 +280,11 @@ feature_names = ['Domain', 'Have_IP', 'Have_At', 'URL_Length', 'URL_Depth','Redi
                  'Domain_Age', 'Domain_End', 'iFrame', 'Mouse_Over','Right_Click', 'Web_Forwards', 'Label']
 
 legitimate = pd.DataFrame(legi_features, columns= feature_names)
-legitimate.head()
+print(legitimate.head())
 legitimate.to_csv('legitimate.csv', index= False)
 
 # extract features from phishing URLs
-phishurl.shape
+print(phishurl.shape)
 phish_features = []
 label = 1
 
@@ -296,11 +297,11 @@ feature_names = ['Domain', 'Have_IP', 'Have_At', 'URL_Length', 'URL_Depth','Redi
                  'Domain_Age', 'Domain_End', 'iFrame', 'Mouse_Over','Right_Click', 'Web_Forwards', 'Label']
 
 phishing = pd.DataFrame(phish_features, columns= feature_names)
-phishing.head()
+print(phishing.head())
 phishing.to_csv('phishing.csv', index= False)
 
 urldata = pd.concat([legitimate, phishing]).reset_index(drop=True)
-urldata.head()
-urldata.tail()
-urldata.shape
+print(urldata.head())
+print(urldata.tail())
+print(urldata.shape)
 urldata.to_csv('urldata.csv', index=False)
