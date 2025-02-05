@@ -1,5 +1,6 @@
 
 import pandas
+import re
 
 class Features:
 
@@ -13,8 +14,11 @@ class Features:
     
     def extract(self):
         
-        def hasIP():
-            pass
+        def hasIP(url: str) -> bool:
+            pattern = r'((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}'
+            match = re.search(pattern, url)
+
+            return (match is not None)
 
         # bernas
         def numberSig():
