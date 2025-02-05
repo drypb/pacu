@@ -1,8 +1,5 @@
 
-import pathlib
 import pandas
-import csv
-
 
 class Features:
 
@@ -10,7 +7,7 @@ class Features:
     csvf: pandas.DataFrame
 
     def __init__(self, path: str):
-        self.csvf = pd.read_csv(path)
+        self.csvf = pandas.read_csv(path)
         self.path = path
 
     
