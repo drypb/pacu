@@ -29,7 +29,7 @@ class Features:
         def symbolSig():
             pass
 
-        def urlLen(url: str) -> int:
+        def urlLength(url: str) -> int:
             return len(url)
 
         def urlDepth(url: str) -> int:
