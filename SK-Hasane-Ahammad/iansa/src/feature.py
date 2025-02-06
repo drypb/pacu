@@ -1,4 +1,5 @@
 
+from urllib.parse import urlparse
 import pandas
 import re
 
@@ -15,7 +16,7 @@ class Features:
     def extract(self):
         
         def hasIP(url: str) -> bool:
-            pattern = r'((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}'
+            pattern = r'((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}' # ipv4 pattern
             match = re.search(pattern, url)
 
             return (match is not None)
@@ -31,8 +32,11 @@ class Features:
         def urlLen(url: str) -> int:
             return len(url)
 
-        def urlDepth():
-            pass
+        def urlDepth(url: str) -> int:
+            path = urlparse(url).path
+            segments = [s for s in path.split('/') if s] # discard empty strings
+
+            return len(segments)
 
         def subdomainSig():
             pass 
