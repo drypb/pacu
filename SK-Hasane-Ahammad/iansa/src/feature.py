@@ -38,8 +38,11 @@ class Features:
 
             return len(segments)
 
-        def subdomainSig():
-            pass 
+        def subdomainCount(url: str) -> int:
+            hostname = urlparse(url).hostname
+            labels = [l for l in hostname.split('.') if l]
+
+            return (len(labels) - 2) # exclude TLD and SLD
 
         def argSig():
             pass
