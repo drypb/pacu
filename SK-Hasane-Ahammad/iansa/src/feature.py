@@ -44,8 +44,11 @@ class Features:
 
             return (len(labels) - 2) # exclude TLD and SLD
 
-        def argSig():
-            pass
+        def queryParamsCount(url: str) -> int:
+            query = urlparse(url).query
+            params = [p for p in query.split('&') if p]
+
+            return len(params)
 
         # bernas
         def randomSig():
