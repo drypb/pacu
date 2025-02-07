@@ -1,5 +1,7 @@
 
+from urllib.parse import urlparse
 import pandas
+import re
 
 class Features:
 
@@ -13,8 +15,11 @@ class Features:
     
     def extract(self):
         
-        def hasIP():
-            pass
+        def hasIP(url: str) -> bool:
+            pattern = r'((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}' # ipv4 pattern
+            match = re.search(pattern, url)
+
+            return (match is not None)
 
         # bernas
         def numberSig():
@@ -24,17 +29,26 @@ class Features:
         def symbolSig():
             pass
 
-        def urlLen():
-            pass
+        def urlLength(url: str) -> int:
+            return len(url)
 
-        def urlDepth():
-            pass
+        def urlDepth(url: str) -> int:
+            path = urlparse(url).path
+            segments = [s for s in path.split('/') if s] # discard empty strings
 
-        def subdomainSig():
-            pass 
+            return len(segments)
 
-        def argSig():
-            pass
+        def subdomainCount(url: str) -> int:
+            hostname = urlparse(url).hostname
+            labels = [l for l in hostname.split('.') if l]
+
+            return (len(labels) - 2) # exclude TLD and SLD
+
+        def queryParamsCount(url: str) -> int:
+            query = urlparse(url).query
+            params = [p for p in query.split('&') if p]
+
+            return len(params)
 
         # bernas
         def randomSig():
