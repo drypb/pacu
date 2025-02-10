@@ -12,7 +12,7 @@ class Features:
         self.csvf = pandas.read_csv(path)
         self.path = path
 
-    
+
     def extract(self):
         
         def hasIP(url: str) -> bool:
@@ -21,17 +21,13 @@ class Features:
 
             return (match is not None)
 
-        # bernas
         def numberCount():
-            pass
+            hostname = urlparse(url).hostname
+            return sum(c.isdigit() for c in hostname)
 
-        # bernas
-        # separar em funções menores
-        # atSymbolCount() : @
-        # dashSymbolCount() : -
-        # etc.
-        def symbolCount():
-            pass
+        def dashSymbolCount():
+            hostname = urlparse(url).hostname
+            return hostname.count('-')
 
         def urlLength(url: str) -> int:
             return len(url)
@@ -39,7 +35,6 @@ class Features:
         def urlDepth(url: str) -> int:
             path = urlparse(url).path
             segments = [s for s in path.split('/') if s] # discard empty strings
-
             return len(segments)
 
         def subdomainCount(url: str) -> int:
@@ -56,5 +51,10 @@ class Features:
 
         # bernas
         def randomness():
+            hostname = urlparse(url).hostname
             pass
+
+        def hasPort():
+            port = urlparse(url).port
+            return (port is not None)
 
