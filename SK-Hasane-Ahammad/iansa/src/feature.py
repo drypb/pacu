@@ -22,11 +22,15 @@ class Features:
             return (match is not None)
 
         # bernas
-        def numberSig():
+        def numberCount():
             pass
 
         # bernas
-        def symbolSig():
+        # separar em funções menores
+        # atSymbolCount() : @
+        # dashSymbolCount() : -
+        # etc.
+        def symbolCount():
             pass
 
         def urlLength(url: str) -> int:
@@ -51,6 +55,6 @@ class Features:
             return len(params)
 
         # bernas
-        def randomSig():
+        def randomness():
             pass
 
