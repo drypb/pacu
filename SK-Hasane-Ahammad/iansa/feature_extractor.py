@@ -4,14 +4,12 @@ import re
 
 class FeatureExtractor:
 
-    path: str
     datf: pd.DataFrame
 
-    def __init__(self, path: str):
-        self.path = path
+    def __init__(self, path: str) -> None:
         self.datf = pd.read_csv(path)
 
-    def extract(self):
+    def extract(self) -> None:
         
         def has_ip(url: str) -> bool:
             pattern = r'((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}' # ipv4 pattern
@@ -54,3 +52,15 @@ class FeatureExtractor:
             port = urlparse(url).port
 
             return (port is not None)
+        
+        self.datf['has_ip'] = self.datf['url'].apply(has_ip)
+        self.datf['number_count'] = self.datf['url'].apply(number_count)
+        self.datf['dash_symbol_count'] = self.datf['url'].apply(dash_symbol_count)
+        self.datf['url_length'] = self.datf['url'].apply(url_length)
+        self.datf['url_depth'] = self.datf['url'].apply(url_depth)
+        self.datf['subdomain_count'] = self.datf['url'].apply(subdomain_count)
+        self.datf['query_params_count'] = self.datf['url'].apply(query_params_count)
+        self.datf['has_port'] = self.datf['url'].apply(has_port)
+
+    def export(self, path: str) -> None:
+        self.datf.to_csv(path, index=False)
