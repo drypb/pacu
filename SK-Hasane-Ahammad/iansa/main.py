@@ -6,6 +6,7 @@ from sklearn.metrics import accuracy_score
 
 def preprocess(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe = dataframe.replace({False: 0, True: 1})
+    dataframe = dataframe.infer_objects(copy=False)
     dataframe = dataframe.drop_duplicates()
 
     # URL column is not needed for model training
@@ -20,7 +21,14 @@ def preprocess(dataframe: pd.DataFrame) -> pd.DataFrame:
 
 def main():
     df = pd.read_csv('out.csv')
+
+    print(df.head())
+    print(df.info())
+
+    print('preprocessing...')
     df = preprocess(df)
+    print(df.head())
+    print(df.info())
 
     X = df.drop(columns=['label'])
     y = df['label']
@@ -34,7 +42,7 @@ def main():
     y_pred = mlp.predict(X_test)
 
     accuracy = accuracy_score(y_test, y_pred)
-    print(f'Accuracy: {accuracy:.2f}')
+    print(f'MLP accuracy: {accuracy:.4f}')
 
 if __name__ == "__main__":
     main()
