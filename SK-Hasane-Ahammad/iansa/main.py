@@ -1,5 +1,8 @@
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
 
 def preprocess(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe = dataframe.replace({False: 0, True: 1})
@@ -16,9 +19,22 @@ def preprocess(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 def main():
-    pass
+    df = pd.read_csv('out.csv')
+    df = preprocess(df)
 
+    X = df.drop(columns=['label'])
+    y = df['label']
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    mlp = MLPClassifier(hidden_layer_sizes=(100,), max_iter=300, random_state=42)
+
+    mlp.fit(X_train, y_train)
+
+    y_pred = mlp.predict(X_test)
+
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f'Accuracy: {accuracy:.2f}')
 
 if __name__ == "__main__":
     main()
-
