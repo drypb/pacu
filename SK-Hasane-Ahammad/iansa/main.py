@@ -2,11 +2,12 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, classification_report
+
+pd.set_option('future.no_silent_downcasting', True)
 
 def preprocess(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe = dataframe.replace({False: 0, True: 1})
-    dataframe = dataframe.infer_objects(copy=False)
     dataframe = dataframe.drop_duplicates()
 
     # URL column is not needed for model training
@@ -35,7 +36,7 @@ def main():
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    mlp = MLPClassifier(hidden_layer_sizes=(100,), max_iter=300, random_state=42)
+    mlp = MLPClassifier(hidden_layer_sizes=(128, 64, 32, 16), max_iter=300, random_state=42)
 
     mlp.fit(X_train, y_train)
 
@@ -43,6 +44,7 @@ def main():
 
     accuracy = accuracy_score(y_test, y_pred)
     print(f'MLP accuracy: {accuracy:.4f}')
+    print(classification_report(y_test, y_pred))
 
 if __name__ == "__main__":
     main()
