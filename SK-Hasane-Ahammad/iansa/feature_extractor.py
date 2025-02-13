@@ -1,66 +1,36 @@
-from urllib.parse import urlparse
+from multiprocessing import Pool, cpu_count
+from features import extract_features
 import pandas as pd
-import re
+import math
+import sys
 
 class FeatureExtractor:
 
-    datf: pd.DataFrame
+    df: pd.DataFrame
 
     def __init__(self, path: str) -> None:
-        self.datf = pd.read_csv(path)
+        self.df = pd.read_csv(path)
 
     def extract(self) -> None:
+        n_procs = cpu_count()
+        chunk_size = math.ceil(self.df.shape[0] / n_procs)
+        chunks = []
+
+        for i in range(n_procs):
+            start_index = i * chunk_size
+            end_index = (i + 1) * chunk_size
+            df_chunk = self.df.iloc[start_index:end_index]
+            chunks.append(df_chunk)
+
+        with Pool(n_procs) as pool:
+            results = pool.map(extract_features, chunks)
         
-        def has_ip(url: str) -> bool:
-            pattern = r'((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}' # ipv4 pattern
-            match = re.search(pattern, url)
-
-            return (match is not None)
-
-        def number_count(url: str) -> int:
-            hostname = urlparse(url).hostname
-
-            return sum(c.isdigit() for c in hostname)
-
-        def dash_symbol_count(url: str) -> int:
-            hostname = urlparse(url).hostname
-
-            return hostname.count('-')
-
-        def url_length(url: str) -> int:
-            return len(url)
-
-        def url_depth(url: str) -> int:
-            path = urlparse(url).path
-            segments = [s for s in path.split('/') if s] # discard empty strings
-
-            return len(segments)
-
-        def subdomain_count(url: str) -> int:
-            hostname = urlparse(url).hostname
-            labels = [l for l in hostname.split('.') if l]
-
-            return (len(labels) - 2) # exclude TLD and SLD
-
-        def query_params_count(url: str) -> int:
-            query = urlparse(url).query
-            params = [p for p in query.split('&') if p]
-
-            return len(params)
-
-        def has_port(url: str) -> bool:
-            port = urlparse(url).port
-
-            return (port is not None)
-        
-        self.datf['has_ip'] = self.datf['url'].apply(has_ip)
-        self.datf['number_count'] = self.datf['url'].apply(number_count)
-        self.datf['dash_symbol_count'] = self.datf['url'].apply(dash_symbol_count)
-        self.datf['url_length'] = self.datf['url'].apply(url_length)
-        self.datf['url_depth'] = self.datf['url'].apply(url_depth)
-        self.datf['subdomain_count'] = self.datf['url'].apply(subdomain_count)
-        self.datf['query_params_count'] = self.datf['url'].apply(query_params_count)
-        self.datf['has_port'] = self.datf['url'].apply(has_port)
+        self.df = pd.concat(results)
 
     def export(self, path: str) -> None:
-        self.datf.to_csv(path, index=False)
+        self.df.to_csv(path, index=False)
+
+if __name__ == '__main__':
+    fe = FeatureExtractor(sys.argv[1])
+    fe.extract()
+    fe.export(sys.argv[2])
