@@ -3,6 +3,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, classification_report
+import sys
 
 pd.set_option('future.no_silent_downcasting', True)
 
@@ -21,13 +22,15 @@ def preprocess(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 def main():
-    df = pd.read_csv('out.csv')
+    df = pd.read_csv(sys.argv[1])
+    print('loaded dataset:\n\n')
 
     print(df.head())
     print(df.info())
 
-    print('preprocessing...')
     df = preprocess(df)
+    print('\n\npreprocessed dataset:\n\n')
+
     print(df.head())
     print(df.info())
 
@@ -38,8 +41,11 @@ def main():
 
     mlp = MLPClassifier(hidden_layer_sizes=(128, 64, 32, 16), max_iter=300, random_state=42)
 
+    print('\n\ntraining MLP...\n\n')
+
     mlp.fit(X_train, y_train)
 
+    print('\n\ntesting...\n\n')
     y_pred = mlp.predict(X_test)
 
     accuracy = accuracy_score(y_test, y_pred)
