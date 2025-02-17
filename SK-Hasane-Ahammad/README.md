@@ -14,7 +14,3 @@ De acordo com o autor, `Bening_list_big_final.csv` deveria estar disponível em 
 ## `processed_data/`
 
 Arquivos gerados pelo script `feature_extraction.py`.
-
-## `iansa/`
-
-Nossa adaptação do código do autor com melhorias.
