@@ -4,10 +4,9 @@ import re
 import string
 import scipy
 
-import lexical_features as lf
-import distribution_features as dstf
-import distributions as dsts
-
+from features.lexical_features import *
+from features.distribution_features import *
+from features.distributions import *
 
 def extract_features(df: pd.DataFrame) -> pd.DataFrame:
     df['has_ip'] = df['url'].apply(has_ip)
@@ -19,12 +18,12 @@ def extract_features(df: pd.DataFrame) -> pd.DataFrame:
     df['query_params_count'] = df['url'].apply(query_params_count)
     df['has_port'] = df['url'].apply(has_port)
 
-    df['ks_char'] = df['url'].apply(lambda x: dstf.kolmogorov_smirnov(x, dstf.char_dist, dsts.frequency_char_ptbr))
-    df['kl_char'] = df['url'].apply(lambda x: dstf.kullback_leibler(x, dstf.char_dist, dsts.frequency_char_ptbr))
-    df['eucli_char'] = df['url'].apply(lambda x: dstf.euclidean_dist(x, dstf.char_dist, dsts.frequency_char_ptbr))
-    df['eucli_char'] = df['url'].apply(lambda x: dstf.euclidean_dist(x, dstf.char_dist, dsts.frequency_char_ptbr))
-    df['cs_char'] = df['url'].apply(lambda x: dstf.cheby_shev_dist(x, dstf.char_dist, dsts.frequency_char_ptbr))
-    df['man_char'] = df['url'].apply(lambda x: dstf.manhattan_dist(x, dstf.char_dist, dsts.frequency_char_ptbr))
+    df['ks_char'] = df['url'].apply(lambda x: kolmogorov_smirnov(x, char_dist, frequency_char_ptbr))
+    df['kl_char'] = df['url'].apply(lambda x: kullback_leibler(x, char_dist, frequency_char_ptbr))
+    df['eucli_char'] = df['url'].apply(lambda x: euclidean_dist(x, char_dist, frequency_char_ptbr))
+    df['eucli_char'] = df['url'].apply(lambda x: euclidean_dist(x, char_dist, frequency_char_ptbr))
+    df['cs_char'] = df['url'].apply(lambda x: cheby_shev_dist(x, char_dist, frequency_char_ptbr))
+    df['man_char'] = df['url'].apply(lambda x: manhattan_dist(x, char_dist, frequency_char_ptbr))
     
     return df
 
