@@ -33,3 +33,9 @@ def subdomain_count(url: str) -> int:
 
 def query_params_count(url: str) -> int:
     query = urlparse(url).query
+    params = [p for p in query.split('&') if p]
+    return len(params)
+
+def has_port(url: str) -> bool:
+    port = urlparse(url).port
+    return (port is not None)
