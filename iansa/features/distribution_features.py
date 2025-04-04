@@ -49,7 +49,7 @@ def kullback_leibler(url: str, calc_dist: Callable[str,list], dist: list) -> flo
     url_dist = calc_dist(url)
     result = scipy.stats.entropy(url_dist, dist)
 
-    return result[0]
+    return result
 
 def euclidean_dist(url: str, calc_dist: Callable[str,list], dist: list) -> float:
     url_dist = calc_dist(url)
@@ -57,7 +57,7 @@ def euclidean_dist(url: str, calc_dist: Callable[str,list], dist: list) -> float
 
     return result
 
-def cheby_shev_distance(url: str, calc_dist: Callable[str,list], dist: list) -> float:
+def cheby_shev_dist(url: str, calc_dist: Callable[str,list], dist: list) -> float:
     url_dist = calc_dist(url)
     result = scipy.spatial.distance.chebyshev(url_dist, dist)
 
