@@ -1,5 +1,5 @@
 from multiprocessing import Pool, cpu_count
-from features import extract_features
+from features.features import extract_features
 
 import pandas as pd
 import math
