@@ -26,14 +26,6 @@ def extract_features(df: pd.DataFrame) -> pd.DataFrame:
     df['cs_char'] = df['url'].apply(lambda x: dstf.cheby_shev_dist(x, dstf.char_dist, dsts.frequency_char_ptbr))
     df['man_char'] = df['url'].apply(lambda x: dstf.manhattan_dist(x, dstf.char_dist, dsts.frequency_char_ptbr))
     
-    df['ks_bigram'] = df['url'].apply(lambda x: dstf.kolmogorov_smirnov(x, dstf.bigram_dist, dsts.frequency_bigram_unlabeled))
-    df['kl_bigram'] = df['url'].apply(lambda x: dstf.kullback_leibler(x, dstf.bigram_dist, dsts.frequency_bigram_unlabeled))
-    df['eucli_bigram'] = df['url'].apply(lambda x: dstf.euclidean_dist(x, dstf.bigram_dist, dsts.frequency_bigram_unlabeled))
-    df['eucli_bigram'] = df['url'].apply(lambda x: dstf.euclidean_dist(x, dstf.bigram_dist, dsts.frequency_bigram_unlabeled))
-    df['cs_bigram'] = df['url'].apply(lambda x: dstf.cheby_shev_dist(x, dstf.bigram_dist, dsts.frequency_bigram_unlabeled))
-    df['man_bigram'] = df['url'].apply(lambda x: dstf.manhattan_dist(x, dstf.bigram_dist, dsts.frequency_bigram_unlabeled))
-    
-   
     return df
 
 
