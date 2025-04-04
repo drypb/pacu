@@ -25,6 +25,18 @@ import feature_extractor as fext
 import pandas as pd
 import click
 
+class CustomCommand(click.Command):
+    """
+    Custom Click command class that extracts and displays function
+    docstrings.
+
+    This subclass overrides `get_help` to dynamically return the
+    function's docstring instead of the standard Click-generated help
+    text.
+    """
+    def get_help(self, ctx):
+        return self.callback.__doc__
+
 
 DEF_OUT_PATH = "out.csv"
 
@@ -51,10 +63,15 @@ def cli() -> None:
     pass
 
 
-@cli.command()
+@cli.command(cls=CustomCommand)
 @click.argument("path", type=click.Path(exists=True, dir_okay=False))
 @click.option("--out" , required=False)
 def extract(path: str, out: str) -> None:
+    """
+    python3 main.py extract <path-dataset> --out <output-path>
+
+    --out é opcional, por padrão as features são escritas em "out.csv"
+    """
     fe = fext.FeatureExtractor(path) 
     fe.extract()
     out = out if out else DEF_OUT_PATH
@@ -107,10 +124,17 @@ def _train_model(df: pd.DataFrame, model: str):
     print(classification_report(y_test, y_pred))
 
 
-@cli.command()
+@cli.command(cls=CustomCommand)
 @click.option("--model", required=True)
 @click.option("--path" , required=True, type=click.Path(exists=True, dir_okay=False))
 def train(model: str, path: str) -> None:
+    """
+    python3 main.py train --model <model> --path <features-path>
+    python3 main.py train --model all     --path <features-path>
+
+    model = ["mlp", "rf", "logreg", "svm", "gb", "nb", "lgm", "xgb", "knn", "ada"]
+
+    """
 
     df = pd.read_csv(path)
     df = _preprocess(df) 
