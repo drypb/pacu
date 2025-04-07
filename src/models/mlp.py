@@ -1,6 +1,7 @@
 import torch.nn as nn
 
 class TorchMLP(nn.Module):
+
     def __init__(self, input_dim):
         super().__init__()
         self.model = nn.Sequential(

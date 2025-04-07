@@ -11,6 +11,6 @@ def cli():
 
 
 if __name__ == "__main__":
-    cli.add_argument(extract.extract)
-    cli.add_argument(train.train)
+    cli.add_command(extract.extract)
+    cli.add_command(train.train)
     cli()

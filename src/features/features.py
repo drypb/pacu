@@ -9,6 +9,7 @@ from features.distribution_features import *
 from features.distributions import *
 
 def extract_features(df: pd.DataFrame) -> pd.DataFrame:
+
     df['has_ip'] = df['url'].apply(has_ip)
     df['number_count'] = df['url'].apply(number_count)
     df['dash_symbol_count'] = df['url'].apply(dash_symbol_count)

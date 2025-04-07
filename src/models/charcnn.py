@@ -1,5 +1,5 @@
 import torch.nn as nn 
-
+import torch
 
 class CharCNN(nn.Module):
     def __init__(self, input_dim):
