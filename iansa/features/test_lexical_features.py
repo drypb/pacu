@@ -5,6 +5,10 @@ def test_has_ip():
     assert has_ip("https://example.com") == False
     assert has_ip("ftp://10.0.0.1") == True
     assert has_ip("http://example.com") == False
+    assert has_ip("http://200.17.210.55/path/to/something/") == True
+    assert has_ip("http://lalala.lelele.shop.br/192.168.1.1/") == True
+    assert has_ip("http://192.168.1.1.website.com.br/192.168.1.1/") == True
+    assert has_ip("http://example.com/?r=1.1.1.1") == True
 
 def test_number_count():
     assert number_count("http://example123.com") == 3
@@ -28,6 +32,7 @@ def test_url_depth():
     assert url_depth("https://example.com") == 0
     assert url_depth("http://example.com/a/b/c/d/e") == 5
     assert url_depth("ftp://example.com/") == 0
+    assert url_depth("http://stress.testing.com//////////////////") == 0
 
 def test_subdomain_count():
     assert subdomain_count("http://sub.domain.example.com") == 2
@@ -46,6 +51,7 @@ def test_has_port():
     assert has_port("https://example.com") == False
     assert has_port("ftp://example.com:21") == True
     assert has_port("http://localhost") == False
+    assert has_port("http://my.website.com:7272/path/to/somt") == True
 
 def test_lexical_features():
     test_has_ip()
