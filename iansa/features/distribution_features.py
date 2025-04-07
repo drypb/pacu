@@ -1,42 +1,49 @@
+
 from urllib.parse import urlparse
-from typing import Callable
+from typing import *
 import re
 import string
 import scipy
 
+_CHAR_SPACE = string.printable[:-6]
+_CHAR_SPACE_LEN = len(_CHAR_SPACE)
+_CHAR_INDEX = {c: i for i, c in enumerate(_CHAR_SPACE)}
+
 
 # Helper functions
-
-
 # Replace all special symbols and numbers with a chosen replacement
 def strip_url(url: str, replacement_char: str = "") -> str:
     url=re.sub(urlparse(url).scheme, "", url) # remove scheme  
     url=re.sub("://", "", url)
     return url
 
+
 # Calculates the distrubution of letters in the url 
 def char_dist(url: str) -> list:
-    url=strip_url(url)
-
+    url = strip_url(url)
+    url_len = len(url)
     dist = []
-    for char in string.printable[:-6]:
-        dist.append(url.count(char)/len(url)) 
+    for char in _CHAR_SPACE:
+        dist.append(url.count(char)/url_len) 
     
-    return dist;
+    return dist
 
-# Calculate the bigram distribution for a given url
-def bigram_dist(url: str) -> list:
+
+# distribution_unit = 1/(len(url)-1)
+def bigram_dist(url: str) -> List[float]:
+
     url = strip_url(url)    
-    bigrams = [0]*len(string.printable)**2 
-
-    distribution_unit = 1/(len(url)-1)
+    url_len = len(url)
+    total_bigrams = url_len - 1
+    bigrams = [0.0] * (_CHAR_SPACE_LEN**2)
+    distribution_unit = 1/total_bigrams
  
-    for i, char in enumerate(url[:-1]):
-        idx1 = string.printable.find(url[i])*len(string.printable[:-6])
-        idx2 = string.printable.find(url[i+1])
-        bigrams[idx1 + idx2] += distribution_unit
+    for i in range(total_bigrams):
+        idx = _CHAR_INDEX[url[i]] * _CHAR_SPACE_LEN + _CHAR_INDEX[url[i + 1]]
+        bigrams[idx] += distribution_unit
 
     return bigrams
+
 
 # Actual features 
 def kolmogorov_smirnov(url: str, calc_dist: Callable[[str],list], dist: list) -> float:
