@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch
-import models.utils as utils
+import pacu.models.utils as utils
 
 class CNNLSTM(nn.Module):
 

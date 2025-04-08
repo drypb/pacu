@@ -1,5 +1,5 @@
 import torch.nn as nn
-import models.utils as utils
+import pacu.models.utils as utils
 
 class TorchGRU(nn.Module):
 
