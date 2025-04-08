@@ -10,18 +10,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Restore cached environment
+      uses: actions/cache@v3
+      with:
+        path: test-env/
+        key: ${{ runner.os }}-env-${{ hashFiles('pyproject.toml') }}
+
     - name: Set up environment
       shell: bash
       run: |
-        python3 -m venv test-env
+        if [ ! -d "test-env" ]; then
+          python3 -m venv test-env
+        fi
         source test-env/bin/activate
         pip install --upgrade pip
-
-    - name: Cache pip dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
 
     - name: Install dependencies
       shell: bash
