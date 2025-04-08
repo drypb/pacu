@@ -11,11 +11,12 @@ _CHAR_INDEX = {c: i for i, c in enumerate(_CHAR_SPACE)}
 
 
 # Helper functions
-# Replace all special symbols and numbers with a chosen replacement
-def strip_url(url: str, replacement_char: str = "") -> str:
-    url=re.sub(urlparse(url).scheme, "", url) # remove scheme  
-    url=re.sub("://", "", url)
-    return url
+# Strip scheme and characters outside _CHAR_SPACE
+def strip_url(url: str) -> str:
+    if (scheme := urlparse(url).scheme):
+        url = re.sub(f"^{scheme}://", "", url)
+
+    return "".join(char for char in url if char in _CHAR_SPACE)
 
 
 # Calculates the distrubution of letters in the url 
