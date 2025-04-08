@@ -1,4 +1,3 @@
-
 from urllib.parse import urlparse
 from typing import *
 import re
@@ -78,8 +77,3 @@ def manhattan_dist(url: str, calc_dist: Callable[str,list], dist: list) -> float
     result = scipy.spatial.distance.cityblock(url_dist, dist)
 
     return result
-
-
-
-
-
