@@ -1,5 +1,4 @@
-from distribution_features import *
-from distribution_features import _CHAR_INDEX, _CHAR_SPACE_LEN
+from pacu.distribution_features import *
 
 def test_strip_url():
     assert strip_url("https://www.example.com") == "www.example.com"

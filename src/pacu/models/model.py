@@ -8,24 +8,24 @@ import torch.optim as optim
 import torch.nn as nn
 import torch
 
-from models.dataset import *
+from pacu.models.dataset import *
 
-import models.charcnn
-import models.cnnlstm
-import models.gru
-import models.lstm
-import models.mlp
-import models.model
-import models.siamese
+import pacu.models.charcnn
+import pacu.models.cnnlstm
+import pacu.models.gru
+import pacu.models.lstm
+import pacu.models.mlp
+import pacu.models.model
+import pacu.models.siamese
 
 
 _MODELS = {
-    "mlp"     : lambda n: models.mlp.TorchMLP(n),
-    "charcnn" : lambda n: models.charcnn.CharCNN(n),
-    "cnnlstm" : lambda n: models.cnnlstm.CNNLSTM(n),
-    "gru"     : lambda n: models.gru.TorchGRU(n),
-    "lstm"    : lambda n: models.lstm.TorchLSTM(n),
-    "siamese" : lambda n: models.siamese.SiameseNet(n)
+    "mlp"     : lambda n: pacu.models.mlp.TorchMLP(n),
+    "charcnn" : lambda n: pacu.models.charcnn.CharCNN(n),
+    "cnnlstm" : lambda n: pacu.models.cnnlstm.CNNLSTM(n),
+    "gru"     : lambda n: pacu.models.gru.TorchGRU(n),
+    "lstm"    : lambda n: pacu.models.lstm.TorchLSTM(n),
+    "siamese" : lambda n: pacu.models.siamese.SiameseNet(n)
 }
 
 

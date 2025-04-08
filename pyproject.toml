@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pacu"
+version = "1.0.0"
+description = "Tool to manage hosts via GitLab pipelines"
+authors = [
+  { name = "Bernardo Pavloski Tomasi", email = "bpt22@inf.ufpr.br" }
+]
+readme = "README.md"
+requires-python = ">=3.7"
+
+dependencies = [
+  "click",
+  "torch",
+  "scikit-learn",
+  "scipy",
+  "pandas"
+]
+
+[project.scripts]
+pacu = "pacu.cli:cli"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

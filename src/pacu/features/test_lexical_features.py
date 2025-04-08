@@ -1,4 +1,4 @@
-from lexical_features import *
+from pacu.features.lexical_features import *
 
 def test_has_ip():
     assert has_ip("http://192.168.1.1") == True

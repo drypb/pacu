@@ -1,5 +1,5 @@
 
-import features.extractor as fe
+from pacu.features import extractor as fe
 import click
 
 
