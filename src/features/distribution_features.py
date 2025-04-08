@@ -5,7 +5,7 @@ import re
 import string
 import scipy
 
-_CHAR_SPACE = string.printable[:-6]
+_CHAR_SPACE = string.printable[:-6] # printable characters except whitespaces
 _CHAR_SPACE_LEN = len(_CHAR_SPACE)
 _CHAR_INDEX = {c: i for i, c in enumerate(_CHAR_SPACE)}
 
