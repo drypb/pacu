@@ -1,0 +1,26 @@
+name: Feature tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: continuumio/miniconda3
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up conda environment
+      shell: bash
+      run: |
+        conda update -n base -c defaults conda -y --quiet
+        conda create -n test-env python=3.12 pytest pandas scipy -y --quiet
+
+    - name: Run tests
+      shell: bash
+      run: |
+        eval "$(conda shell.bash hook)"
+        conda activate test-env
+        pytest -v --color=yes src/features/

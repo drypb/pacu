@@ -50,7 +50,3 @@ def extract_features(df: pd.DataFrame) -> pd.DataFrame:
     print("man_char completed.")
     
     return df
-
-
-
-
