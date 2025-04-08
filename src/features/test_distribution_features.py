@@ -4,7 +4,7 @@ from distribution_features import _CHAR_INDEX, _CHAR_SPACE_LEN
 def test_strip_url():
     assert strip_url("https://www.example.com") == "www.example.com"
     assert strip_url("http://example.com") == "example.com"
-    assert strip_url("ftp://ftp.example.com") == "ftp.example.com" # falhou!
+    assert strip_url("ftp://ftp.example.com") == "ftp.example.com"
     assert strip_url("example.com") == "example.com"
     assert strip_url("https://sub.example.com/123") == "sub.example.com/123"
     assert strip_url("http://test-site.com/path/to/page") == "test-site.com/path/to/page"
@@ -13,7 +13,11 @@ def test_strip_url():
     assert strip_url("https://example.com:8080") == "example.com:8080"
     assert strip_url("ftp://localhost:21") == "localhost:21"
     assert strip_url("https://sub.domain.example.com/path/to/resource") == "sub.domain.example.com/path/to/resource"
-    assert strip_url("http://example.com/?r=http://redirect.org") == "example.com/?r=http://redirect.org" # falhou!
+    assert strip_url("http://example.com/?r=http://redirect.org") == "example.com/?r=http://redirect.org"
+    assert strip_url("https:// some weird stuff here.com/ space     /") == "someweirdstuffhere.com/space/"
+    assert strip_url("http://somewhere21.com/this is a tab\texample\t/") == "somewhere21.com/thisisatabexample/"
+    assert strip_url("     https://leading.and.trailing.spaces.com/       ") == "leading.and.trailing.spaces.com/"
+    assert strip_url("ftp:// \t\f\r\n\v  ok.com") == "ok.com"
 
 def test_char_dist():
     # teste 1
