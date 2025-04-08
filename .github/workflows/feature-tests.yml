@@ -15,8 +15,8 @@ jobs:
     - name: Set up conda environment
       shell: bash
       run: |
-        conda update -n base -c defaults conda -y
-        conda create -n test-env python=3.12 pytest pandas scipy -y
+        conda update -n base -c defaults conda -y --quiet
+        conda create -n test-env python=3.12 pytest pandas scipy -y --quiet
 
     - name: Run tests
       shell: bash
