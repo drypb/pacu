@@ -52,13 +52,3 @@ def test_has_port():
     assert has_port("ftp://example.com:21") == True
     assert has_port("http://localhost") == False
     assert has_port("http://my.website.com:7272/path/to/somt") == True
-
-def test_lexical_features():
-    test_has_ip()
-    test_number_count()
-    test_dash_symbol_count()
-    test_url_length()
-    test_url_depth()
-    test_subdomain_count()
-    test_query_params_count()
-    test_has_port()

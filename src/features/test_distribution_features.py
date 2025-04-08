@@ -106,8 +106,3 @@ def test_bigram_dist():
     assert abs(sum(tmp) - 1.0) < 1e-6
     for value in tmp:
         assert 0.0 <= value <= 1.0
-
-def test_distribution_features():
-    test_strip_url()
-    test_char_dist()
-    test_bigram_dist()
