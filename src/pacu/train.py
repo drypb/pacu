@@ -4,7 +4,7 @@ from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 import click
 
-from models.model import Model, _MODELS
+from pacu.models.model import Model, _MODELS
 
 
 def _train_model(df: pd.DataFrame, model_name: str) -> None:

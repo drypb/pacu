@@ -4,9 +4,9 @@ import re
 import string
 import scipy
 
-from features.lexical_features import *
-from features.distribution_features import *
-from features.distributions import *
+from pacu.features.lexical_features import *
+from pacu.features.distribution_features import *
+from pacu.features.distributions import *
 
 def extract_features(df: pd.DataFrame) -> pd.DataFrame:
 
