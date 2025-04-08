@@ -13,10 +13,12 @@ _CHAR_INDEX = {c: i for i, c in enumerate(_CHAR_SPACE)}
 # Helper functions
 # Strip scheme and characters outside _CHAR_SPACE
 def strip_url(url: str) -> str:
+    url = "".join(char for char in url if char in _CHAR_SPACE)
+
     if (scheme := urlparse(url).scheme):
         url = re.sub(f"^{scheme}://", "", url)
 
-    return "".join(char for char in url if char in _CHAR_SPACE)
+    return url
 
 
 # Calculates the distrubution of letters in the url 
