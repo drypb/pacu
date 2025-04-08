@@ -18,21 +18,18 @@ import pacu.models.mlp
 import pacu.models.model
 import pacu.models.siamese
 
-
 _MODELS = {
-    "mlp"     : lambda n: pacu.models.mlp.TorchMLP(n),
-    "charcnn" : lambda n: pacu.models.charcnn.CharCNN(n),
-    "cnnlstm" : lambda n: pacu.models.cnnlstm.CNNLSTM(n),
-    "gru"     : lambda n: pacu.models.gru.TorchGRU(n),
-    "lstm"    : lambda n: pacu.models.lstm.TorchLSTM(n),
-    "siamese" : lambda n: pacu.models.siamese.SiameseNet(n)
+    "mlp"     : lambda n,o: pacu.models.mlp.TorchMLP(n,o),
+    "charcnn" : lambda n,o: pacu.models.charcnn.CharCNN(n,o),
+    "cnnlstm" : lambda n,o: pacu.models.cnnlstm.CNNLSTM(n,o),
+    "gru"     : lambda n,o: pacu.models.gru.TorchGRU(n,o),
+    "lstm"    : lambda n,o: pacu.models.lstm.TorchLSTM(n,o),
+    "siamese" : lambda n,o: pacu.models.siamese.SiameseNet(n,o)
 }
-
 
 _DATASET = {
     "siamese" : SiameseDataset
 }
-
 
 @dataclass
 class Model:
@@ -43,10 +40,10 @@ class Model:
     x_test     : Any
     y_train    : Any
     y_test     : Any
+    options    : dict
     batch_size : int = 32
     device     : torch.device = field(init=False)
     model      : nn.Module    = field(init=False)
-    
 
     def __post_init__(self):
         dev = "cpu"
@@ -54,7 +51,8 @@ class Model:
             dev = "cuda"
 
         self.device = torch.device(dev)
-        self.model  = _MODELS[self.model_name](self.input_dim).to(self.device)
+
+        self.model  = _MODELS[self.model_name](self.input_dim, self.options).to(self.device)
         self.loader = DataLoader(
             _DATASET.get(self.model_name, TabularDataset)(self.x_train, self.y_train),
             batch_size = self.batch_size,
