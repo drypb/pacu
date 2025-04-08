@@ -1,17 +1,36 @@
 import torch.nn as nn
 import torch
+import models.utils as utils
 
 class SiameseNet(nn.Module):
-    def __init__(self, input_dim):
+
+    default = {
+        "layers" : (128,64)
+    }
+
+    def __init__(self, input_dim: int, options: dict):
         super().__init__()
-        self.embedding = nn.Sequential(
-            nn.Linear(input_dim, 128),
-            nn.ReLU(),
-            nn.Linear(128, 64),
-            nn.ReLU()
-        )
+
+        if not options:
+            options = self.default
+        else:
+            if not utils.is_valid(self.default,options):
+               print("Invalid options passed to Siamese Net")
+               print(f"Siamese Net options: {self.default.keys()}")
+               exit(1) 
+
+        embedding = []
+        last = input_dim
+        for layer in options["layers"]:
+            embedding.append(nn.Linear(last, layer))
+            embedding.append(nn.ReLU())
+            last = layer
+           
+        self.embedding = nn.Sequential(*embedding)
+         
+
         self.fc = nn.Sequential(
-            nn.Linear(64, 1),
+            nn.Linear(last, 1),
             nn.Sigmoid()
         )
 

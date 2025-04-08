@@ -1,10 +1,25 @@
 import torch.nn as nn
+import models.utils as utils
 
 class TorchLSTM(nn.Module):
-    def __init__(self, input_dim, hidden_dim=64):
+
+    default = {
+        "hidden_dim" : 64
+    }
+
+    def __init__(self, input_dim: int, options: int):
         super().__init__()
-        self.lstm = nn.LSTM(input_dim, hidden_dim, batch_first=True)
-        self.fc = nn.Linear(hidden_dim, 1)
+        
+        if not options:
+            options = self.default
+        else:
+            if not utils.is_valid(self.default, options):
+                print("Invalid options for LSTM")
+                print(f"LSTM options: {self.default.keys()}")
+                exit(1)
+
+        self.lstm = nn.LSTM(input_dim, options["hidden_dim"], batch_first=True)
+        self.fc = nn.Linear(options["hidden_dim"], 1)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):

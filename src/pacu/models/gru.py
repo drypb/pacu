@@ -1,10 +1,26 @@
 import torch.nn as nn
+import models.utils as utils
 
 class TorchGRU(nn.Module):
-    def __init__(self, input_dim, hidden_dim=64):
+
+    default = {
+        "hidden_dim" : 64
+    }
+
+    def __init__(self, input_dim: int, options: dict):
         super().__init__()
-        self.gru = nn.GRU(input_dim, hidden_dim, batch_first=True)
-        self.fc = nn.Linear(hidden_dim, 1)
+
+        if not options:
+            options = self.default
+        else:
+            if not utils.is_valid(self.default, options):
+                print("Invalid options for GRU")
+                print(f"GRU options: {self.default.keys()}")
+                exit(1)
+
+
+        self.gru = nn.GRU(input_dim, options["hidden_dim"], batch_first=True)
+        self.fc = nn.Linear(options["hidden_dim"], 1)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
