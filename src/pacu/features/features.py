@@ -1,52 +1,33 @@
-from urllib.parse import urlparse
-import pandas as pd
-import re
-import string
-import scipy
-
 from pacu.features.lexical_features import *
 from pacu.features.distribution_features import *
 from pacu.features.distributions import *
 
+import pandas as pd
+
+def process_row(row: pd.Series) -> pd.Series:
+    url = row["url"]
+    url_s = strip_url(url)
+    fq = compute_frequencies(url_s)
+    chardist = char_dist(url_s, fq)
+    return pd.Series({
+        "url"               : url,
+        "has_ip"            : has_ip(url),
+        "number_count"      : number_count(url),
+        "dash_symbol_count" : dash_symbol_count(url),
+        "url_length"        : url_length(url),
+        "url_depth"         : url_depth(url),
+        "subdomain_count"   : subdomain_count(url),
+        "query_params_count": query_params_count(url),
+        "has_port"          : has_port(url),
+        "ks_char"           : kolmogorov_smirnov(url_s, chardist, frequency_char_ptbr),
+        "kl_char"           : kullback_leibler(url_s, chardist, frequency_char_ptbr),
+        "eucli_char"        : euclidean_dist(url_s, chardist, frequency_char_ptbr),
+        "cs_char"           : cheby_shev_dist(url_s, chardist, frequency_char_ptbr),
+        "man_char"          : manhattan_dist(url_s, chardist, frequency_char_ptbr),
+        "huffman"           : huffman(fq),
+        "label"             : row["label"]
+    })
+
+
 def extract_features(df: pd.DataFrame) -> pd.DataFrame:
-
-    df["has_ip"] = df["url"].apply(has_ip)
-    print("has_ip completed.")
-
-    df["number_count"] = df["url"].apply(number_count)
-    print("number_count completed.")
-
-    df["dash_symbol_count"] = df["url"].apply(dash_symbol_count)
-    print("dash_symbol_count completed.")
-
-    df["url_length"] = df["url"].apply(url_length)
-    print("url_length complted.")
-
-    df["url_depth"] = df["url"].apply(url_depth)
-    print("url_depth completed.")
-
-    df["subdomain_count"] = df["url"].apply(subdomain_count)
-    print("subdomain_count completed.")
-
-    df["query_params_count"] = df["url"].apply(query_params_count)
-    print("subdomain_count completed.")
-
-    df["has_port"] = df["url"].apply(has_port)
-    print("has_port completed.")
-
-    df["ks_char"] = df["url"].apply(lambda x: kolmogorov_smirnov(x, char_dist, frequency_char_ptbr))
-    print("ks_char completed.")
-
-    df["kl_char"] = df["url"].apply(lambda x: kullback_leibler(x, char_dist, frequency_char_ptbr))
-    print("kl_char completed.")
-
-    df["eucli_char"] = df["url"].apply(lambda x: euclidean_dist(x, char_dist, frequency_char_ptbr))
-    print("eucli_char completed.")
-
-    df["cs_char"] = df["url"].apply(lambda x: cheby_shev_dist(x, char_dist, frequency_char_ptbr))
-    print("cs_char completed.")
-
-    df["man_char"] = df["url"].apply(lambda x: manhattan_dist(x, char_dist, frequency_char_ptbr))
-    print("man_char completed.")
-    
-    return df
+    return df.apply(process_row, axis=1)

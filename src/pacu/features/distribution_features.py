@@ -3,10 +3,16 @@ from typing import *
 import re
 import string
 import scipy
+import collections
+import heapq
 
 _CHAR_SPACE = string.printable[:-6] # printable characters except whitespaces
 _CHAR_SPACE_LEN = len(_CHAR_SPACE)
 _CHAR_INDEX = {c: i for i, c in enumerate(_CHAR_SPACE)}
+
+
+def compute_frequencies(url: str) -> dict:
+    return dict(collections.Counter(url))
 
 
 # Helper functions
@@ -21,20 +27,14 @@ def strip_url(url: str) -> str:
 
 
 # Calculates the distrubution of letters in the url 
-def char_dist(url: str) -> list:
-    url = strip_url(url)
+def char_dist(url: str, freqs: list) -> list:
     url_len = len(url)
-    dist = []
-    for char in _CHAR_SPACE:
-        dist.append(url.count(char)/url_len) 
-    
-    return dist
+    return [freqs.get(char, 0) / url_len for char in _CHAR_SPACE]   
 
 
 # distribution_unit = 1/(len(url)-1)
 def bigram_dist(url: str) -> List[float]:
 
-    url = strip_url(url)    
     url_len = len(url)
     total_bigrams = url_len - 1
     bigrams = [0.0] * (_CHAR_SPACE_LEN**2)
@@ -48,32 +48,37 @@ def bigram_dist(url: str) -> List[float]:
 
 
 # Actual features 
-def kolmogorov_smirnov(url: str, calc_dist: Callable[[str],list], dist: list) -> float:
-    url_dist = calc_dist(url)
-    result = scipy.stats.ks_2samp(url_dist, dist)
-
+def kolmogorov_smirnov(url: str, calc_dist: list, dist: list) -> float:
+    result = scipy.stats.ks_2samp(calc_dist, dist)
     return result[0]
 
-def kullback_leibler(url: str, calc_dist: Callable[str,list], dist: list) -> float:
-    url_dist = calc_dist(url)
-    result = scipy.stats.entropy(url_dist, dist)
-
+def kullback_leibler(url: str, calc_dist: list, dist: list) -> float:
+    result = scipy.stats.entropy(calc_dist, dist)
     return result
 
-def euclidean_dist(url: str, calc_dist: Callable[str,list], dist: list) -> float:
-    url_dist = calc_dist(url)
-    result = scipy.spatial.distance.euclidean(url_dist, dist)
-
+def euclidean_dist(url: str, calc_dist: list, dist: list) -> float:
+    result = scipy.spatial.distance.euclidean(calc_dist, dist)
     return result
 
-def cheby_shev_dist(url: str, calc_dist: Callable[str,list], dist: list) -> float:
-    url_dist = calc_dist(url)
-    result = scipy.spatial.distance.chebyshev(url_dist, dist)
-
+def cheby_shev_dist(url: str, calc_dist: list, dist: list) -> float:
+    result = scipy.spatial.distance.chebyshev(calc_dist, dist)
     return result
 
-def manhattan_dist(url: str, calc_dist: Callable[str,list], dist: list) -> float:
-    url_dist = calc_dist(url)
-    result = scipy.spatial.distance.cityblock(url_dist, dist)
-
+def manhattan_dist(url: str, calc_dist: list, dist: list) -> float:
+    result = scipy.spatial.distance.cityblock(calc_dist, dist)
     return result
+
+def huffman(fq: dict) -> int:
+    heap = list(fq.values())
+    heapq.heapify(heap)
+
+    total_length = 0
+
+    while len(heap) > 1:
+        a = heapq.heappop(heap)
+        b = heapq.heappop(heap)
+        merged = a + b
+        total_length += merged
+        heapq.heappush(heap, merged)
+
+    return total_length
