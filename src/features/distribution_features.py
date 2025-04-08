@@ -5,16 +5,19 @@ import re
 import string
 import scipy
 
-_CHAR_SPACE = string.printable[:-6]
+_CHAR_SPACE = string.printable[:-6] # printable characters except whitespaces
 _CHAR_SPACE_LEN = len(_CHAR_SPACE)
 _CHAR_INDEX = {c: i for i, c in enumerate(_CHAR_SPACE)}
 
 
 # Helper functions
-# Replace all special symbols and numbers with a chosen replacement
-def strip_url(url: str, replacement_char: str = "") -> str:
-    url=re.sub(urlparse(url).scheme, "", url) # remove scheme  
-    url=re.sub("://", "", url)
+# Strip scheme and characters outside _CHAR_SPACE
+def strip_url(url: str) -> str:
+    url = "".join(char for char in url if char in _CHAR_SPACE)
+
+    if (scheme := urlparse(url).scheme):
+        url = re.sub(f"^{scheme}://", "", url)
+
     return url
 
 
