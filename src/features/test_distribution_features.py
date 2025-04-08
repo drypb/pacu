@@ -1,9 +1,10 @@
 from distribution_features import *
+from distribution_features import _CHAR_INDEX, _CHAR_SPACE_LEN
 
 def test_strip_url():
     assert strip_url("https://www.example.com") == "www.example.com"
     assert strip_url("http://example.com") == "example.com"
-    assert strip_url("ftp://ftp.example.com") == "ftp.example.com"
+    assert strip_url("ftp://ftp.example.com") == "ftp.example.com" # falhou!
     assert strip_url("example.com") == "example.com"
     assert strip_url("https://sub.example.com/123") == "sub.example.com/123"
     assert strip_url("http://test-site.com/path/to/page") == "test-site.com/path/to/page"
@@ -12,77 +13,99 @@ def test_strip_url():
     assert strip_url("https://example.com:8080") == "example.com:8080"
     assert strip_url("ftp://localhost:21") == "localhost:21"
     assert strip_url("https://sub.domain.example.com/path/to/resource") == "sub.domain.example.com/path/to/resource"
-    assert strip_url("http://example.com/r?=http://redirect.org") == "example.com/r?=http://redirect.org"
+    assert strip_url("http://example.com/?r=http://redirect.org") == "example.com/?r=http://redirect.org" # falhou!
 
 def test_char_dist():
-    # URL simples com poucas letras
-    url1 = "https://www.example.com"
-    result1 = char_dist(url1)
-    print()
-    assert len(result1) == 94
-    
-    # URL com caracteres repetidos
-    url2 = "http://aaaaa.com"
-    result2 = char_dist(url2)
-    assert result2[0] > 0.0
+    # teste 1
+    tmp = char_dist("http://aaaa.com")
+    assert tmp[_CHAR_INDEX['a']] == (4 / 8)
 
-    # URL com letras mistas
-    url3 = "ftp://abcABC.com"
-    result3 = char_dist(url3)
-    # As letras a, b, c, A, B, C terão algumas contagens
-    assert result3[0] > 0  # A letra 'a' deve aparecer
-    assert result3[26] > 0  # A letra 'A' deve aparecer
-    assert result3[1] > 0  # A letra 'b' deve aparecer
-    assert result3[27] > 0  # A letra 'B' deve aparecer
-    assert result3[2] > 0  # A letra 'c' deve aparecer
-    assert result3[28] > 0  # A letra 'C' deve aparecer
-    
-    # URL com letras e outros caracteres não alfabéticos
-    url5 = "http://abc-123.com"
-    result5 = char_dist(url5)
-    # A letra 'a', 'b' e 'c' terão uma certa contagem
-    assert result5[0] > 0  # A letra 'a' deve aparecer
-    assert result5[1] > 0  # A letra 'b' deve aparecer
-    assert result5[2] > 0  # A letra 'c' deve aparecer
-    assert result5[53] > 0  # A letra '1' deve aparecer
-    assert result5[54] > 0  # A letra '2' deve aparecer
-    assert result5[55] > 0  # A letra '3' deve aparecer
-    
-    # URL vazia
-    url6 = "http://"
-    result6 = char_dist(url6)
-    # Para uma URL vazia, todas as distribuições devem ser zero
-    assert all((not r == 0) for r in result6)
+    assert len(tmp) == _CHAR_SPACE_LEN
+    assert abs(sum(tmp) - 1.0) < 1e-6
+    for value in tmp:
+        assert 0.0 <= value <= 1.0
+
+    # teste 2
+    tmp = char_dist("ftp://abcABC.com")
+    assert tmp[_CHAR_INDEX['a']] == (1 / 10)
+    assert tmp[_CHAR_INDEX['A']] == (1 / 10)
+    assert tmp[_CHAR_INDEX['b']] == (1 / 10)
+    assert tmp[_CHAR_INDEX['B']] == (1 / 10)
+    assert tmp[_CHAR_INDEX['c']] == (2 / 10)
+    assert tmp[_CHAR_INDEX['C']] == (1 / 10)
+    assert tmp[_CHAR_INDEX['.']] == (1 / 10)
+    assert tmp[_CHAR_INDEX['o']] == (1 / 10)
+    assert tmp[_CHAR_INDEX['m']] == (1 / 10)
+
+    assert len(tmp) == _CHAR_SPACE_LEN
+    assert abs(sum(tmp) - 1.0) < 1e-6
+    for value in tmp:
+        assert 0.0 <= value <= 1.0
+
+    # teste 3
+    tmp = char_dist("http://abc-123.com")
+    assert tmp[_CHAR_INDEX['x']] == 0
+    assert tmp[_CHAR_INDEX['y']] == 0
+    assert tmp[_CHAR_INDEX['z']] == 0
+    assert tmp[_CHAR_INDEX['7']] == 0
+    assert tmp[_CHAR_INDEX['_']] == 0
+    assert tmp[_CHAR_INDEX['w']] == 0
+    assert tmp[_CHAR_INDEX['f']] == 0
+
+    assert len(tmp) == _CHAR_SPACE_LEN
+    assert abs(sum(tmp) - 1.0) < 1e-6
+    for value in tmp:
+        assert 0.0 <= value <= 1.0
 
 def test_bigram_dist():
-    # URL simples com poucas letras
-    url1 = "https://abc.com"
-    result1 = bigram_dist(url1)
-    assert len(result1) == _CHAR_SPACE_LEN ** 2  # Deve ter 94 * 94 distribuições de bigramas
+    # teste 1
+    tmp = bigram_dist("https://abc.com")
+    assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 6)
+    assert tmp[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == (1 / 6)
+    assert tmp[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['.']] == (1 / 6)
+    assert tmp[_CHAR_INDEX['.'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == (1 / 6)
+    assert tmp[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['o']] == (1 / 6)
+    assert tmp[_CHAR_INDEX['o'] * _CHAR_SPACE_LEN + _CHAR_INDEX['m']] == (1 / 6)
+    assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['a']] == 0
+    assert tmp[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == 0
+    assert tmp[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == 0
 
-    # URL com caracteres repetidos
-    url2 = "http://aaa.com"
-    result2 = bigram_dist(url2)
-    # O par 'a' seguido de 'a' deve aparecer mais vezes, as outras combinações devem ter 0.0
-    assert result2[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['a']] > 0
+    assert len(tmp) == _CHAR_SPACE_LEN ** 2
+    assert abs(sum(tmp) - 1.0) < 1e-6
+    for value in tmp:
+        assert 0.0 <= value <= 1.0
 
-    # URL com letras mistas
-    url3 = "https://abcABC.com"
-    result3 = bigram_dist(url3)
-    assert result3[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] > 0
-    assert result3[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] > 0
-    assert result3[_CHAR_INDEX['A'] * _CHAR_SPACE_LEN + _CHAR_INDEX['B']] > 0
-    assert result3[_CHAR_INDEX['B'] * _CHAR_SPACE_LEN + _CHAR_INDEX['C']] > 0
+    # teste 2
+    tmp = bigram_dist("http://aaa.com")
+    assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['a']] == (2 / 6)
 
-    # URL vazia
-    url4 = "http://"
-    result4 = bigram_dist(url4)
-    assert not all(val != 0 for val in result4)
+    assert len(tmp) == _CHAR_SPACE_LEN ** 2
+    assert abs(sum(tmp) - 1.0) < 1e-6
+    for value in tmp:
+        assert 0.0 <= value <= 1.0
 
-    # URL com apenas um caractere
-    url5 = "http://x"
-    result5 = bigram_dist(url5)
-    assert not all(val != 0 for val in result5)
+    # teste 3
+    tmp = bigram_dist("https://abcABC.com")
+    assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 9)
+    assert tmp[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == (1 / 9)
+    assert tmp[_CHAR_INDEX['A'] * _CHAR_SPACE_LEN + _CHAR_INDEX['B']] == (1 / 9)
+    assert tmp[_CHAR_INDEX['B'] * _CHAR_SPACE_LEN + _CHAR_INDEX['C']] == (1 / 9)
+
+    assert len(tmp) == _CHAR_SPACE_LEN ** 2
+    assert abs(sum(tmp) - 1.0) < 1e-6
+    for value in tmp:
+        assert 0.0 <= value <= 1.0
+
+    # teste 4
+    tmp = bigram_dist("http://a.br")
+    assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['.']] == (1 / 3)
+    assert tmp[_CHAR_INDEX['.'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 3)
+    assert tmp[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['r']] == (1 / 3)
+
+    assert len(tmp) == _CHAR_SPACE_LEN ** 2
+    assert abs(sum(tmp) - 1.0) < 1e-6
+    for value in tmp:
+        assert 0.0 <= value <= 1.0
 
 def test_distribution_features():
     test_strip_url()
