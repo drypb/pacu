@@ -14,7 +14,7 @@ def _train_model(df: pd.DataFrame, model_name: str, options: dict) -> None:
     pseudo_negatives["label"] = 0
     pu_df = pd.concat([positives, pseudo_negatives], ignore_index=True)
 
-    X = pu_df.drop(columns=["label"])
+    X = pu_df.drop(columns=(["label"]))
     y = pu_df["label"]
 
     x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
@@ -34,7 +34,7 @@ def _train_model(df: pd.DataFrame, model_name: str, options: dict) -> None:
     model.accuracy()
 
 
-def _preprocess(df: pd.DataFrame) -> pd.DataFrame:
+def _preprocess(df: pd.DataFrame, drop: str) -> pd.DataFrame:
 
     bool_cols = df.select_dtypes(bool).columns
     df[bool_cols] = df[bool_cols].astype(int)
@@ -44,6 +44,7 @@ def _preprocess(df: pd.DataFrame) -> pd.DataFrame:
     cols_to_normalize = df.columns.difference(["label", "has_ip", "has_port"])
     scaler = MinMaxScaler()
     df[cols_to_normalize] = scaler.fit_transform(df[cols_to_normalize])
+    df = df.drop(columns=drop.split(","))
 
     return df
 
@@ -53,7 +54,7 @@ def parse_layer_list(ctx, param, value):
         return None
 
     layer_list = []
-    for x in value.split(','):
+    for x in value.split(","):
         layer_list.append(int(x.strip()))
 
     return layer_list
@@ -61,19 +62,19 @@ def parse_layer_list(ctx, param, value):
 @click.command()
 @click.option("--model", required=True)
 @click.option("--path" , required=True, type=click.Path(exists=True, dir_okay=False))
-@click.option('--options', is_flag=True)
-@click.option('--layers', callback=parse_layer_list)
-@click.option('--kernel_size', type=int)
-@click.option('--out-channels', type=int)
-@click.option('--padding', type=int)
-@click.option('--hidden-dim', type=int)
-def train(model: str, path: str, options: bool, layers: int, kernel_size: int, out_channels: int, padding: int, hidden_dim: int) -> None:
+@click.option("--options", is_flag=True)
+@click.option("--layers", callback=parse_layer_list)
+@click.option("--kernel_size", type=int)
+@click.option("--out-channels", type=int)
+@click.option("--padding", type=int)
+@click.option("--hidden-dim", type=int)
+@click.option("--drop-features")
+def train(model: str, path: str, options: bool, layers: int, kernel_size: int, out_channels: int, padding: int, hidden_dim: int, drop_features: str) -> None:
 
     df = pd.read_csv(path)
-    df = _preprocess(df) 
-
+    df = _preprocess(df, drop_features) 
     if model == "all" and options:
-        pritn('--model all cannot be used together with --options') 
+        pritn("--model all cannot be used together with --options") 
         exit(1)
 
     options_dict = {}
