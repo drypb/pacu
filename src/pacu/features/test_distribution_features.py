@@ -21,7 +21,10 @@ def test_strip_url():
 
 def test_char_dist():
     # teste 1
-    tmp = char_dist("http://aaaa.com")
+    url = strip_url("http://aaaa.com")
+    fq = compute_frequencies(url)
+    tmp = char_dist(url, fq)
+
     assert tmp[_CHAR_INDEX['a']] == (4 / 8)
 
     assert len(tmp) == _CHAR_SPACE_LEN
@@ -30,7 +33,10 @@ def test_char_dist():
         assert 0.0 <= value <= 1.0
 
     # teste 2
-    tmp = char_dist("ftp://abcABC.com")
+    url = strip_url("ftp://abcABC.com")
+    fq = compute_frequencies(url)
+    tmp = char_dist(url, fq)
+
     assert tmp[_CHAR_INDEX['a']] == (1 / 10)
     assert tmp[_CHAR_INDEX['A']] == (1 / 10)
     assert tmp[_CHAR_INDEX['b']] == (1 / 10)
@@ -47,7 +53,10 @@ def test_char_dist():
         assert 0.0 <= value <= 1.0
 
     # teste 3
-    tmp = char_dist("http://abc-123.com")
+    url = strip_url("http://abc-123.com")
+    fq = compute_frequencies(url)
+    tmp = char_dist(url, fq)
+
     assert tmp[_CHAR_INDEX['x']] == 0
     assert tmp[_CHAR_INDEX['y']] == 0
     assert tmp[_CHAR_INDEX['z']] == 0
@@ -63,7 +72,7 @@ def test_char_dist():
 
 def test_bigram_dist():
     # teste 1
-    tmp = bigram_dist("https://abc.com")
+    tmp = bigram_dist(strip_url("https://abc.com"))
     assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 6)
     assert tmp[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == (1 / 6)
     assert tmp[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['.']] == (1 / 6)
@@ -80,7 +89,7 @@ def test_bigram_dist():
         assert 0.0 <= value <= 1.0
 
     # teste 2
-    tmp = bigram_dist("http://aaa.com")
+    tmp = bigram_dist(strip_url("http://aaa.com"))
     assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['a']] == (2 / 6)
 
     assert len(tmp) == _CHAR_SPACE_LEN ** 2
@@ -89,7 +98,7 @@ def test_bigram_dist():
         assert 0.0 <= value <= 1.0
 
     # teste 3
-    tmp = bigram_dist("https://abcABC.com")
+    tmp = bigram_dist(strip_url("https://abcABC.com"))
     assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 9)
     assert tmp[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == (1 / 9)
     assert tmp[_CHAR_INDEX['A'] * _CHAR_SPACE_LEN + _CHAR_INDEX['B']] == (1 / 9)
@@ -101,7 +110,7 @@ def test_bigram_dist():
         assert 0.0 <= value <= 1.0
 
     # teste 4
-    tmp = bigram_dist("http://a.br")
+    tmp = bigram_dist(strip_url("http://a.br"))
     assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['.']] == (1 / 3)
     assert tmp[_CHAR_INDEX['.'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 3)
     assert tmp[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['r']] == (1 / 3)
