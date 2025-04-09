@@ -7,7 +7,9 @@ name = "pacu"
 version = "1.0.0"
 description = "Tool to manage hosts via GitLab pipelines"
 authors = [
-  { name = "Bernardo Pavloski Tomasi", email = "bpt22@inf.ufpr.br" }
+  { name = "Bernardo Pavloski Tomasi"      , email = "bpt22@inf.ufpr.br"  },
+  { name = "Davi Campos Ribeiro"           , email = "dcr23@inf.ufpr.br"  },
+  { name = "Pedro Henrique Friedrich Ramos", email = "phfr24@inf.ufpr.br" }
 ]
 readme = "README.md"
 requires-python = ">=3.7"
