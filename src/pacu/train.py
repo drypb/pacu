@@ -44,7 +44,8 @@ def _preprocess(df: pd.DataFrame, drop: str) -> pd.DataFrame:
     cols_to_normalize = df.columns.difference(["label", "has_ip", "has_port"])
     scaler = MinMaxScaler()
     df[cols_to_normalize] = scaler.fit_transform(df[cols_to_normalize])
-    df = df.drop(columns=drop.split(","))
+    if drop:
+        df = df.drop(columns=drop.split(","))
 
     return df
 
