@@ -17,7 +17,9 @@ dependencies = [
   "torch",
   "scikit-learn",
   "scipy",
-  "pandas"
+  "pandas",
+  "xgboost",
+  "lightgbm"
 ]
 
 [project.scripts]

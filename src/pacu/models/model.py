@@ -1,4 +1,18 @@
 
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier, BaggingClassifier, ExtraTreesClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import accuracy_score, classification_report
+from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
+
 from dataclasses import *
 from typing import *
 
@@ -18,7 +32,7 @@ import pacu.models.mlp
 import pacu.models.model
 import pacu.models.siamese
 
-_MODELS = {
+_MODELS_TORCH = {
     "mlp"     : lambda n,o: pacu.models.mlp.TorchMLP(n,o),
     "charcnn" : lambda n,o: pacu.models.charcnn.CharCNN(n,o),
     "cnnlstm" : lambda n,o: pacu.models.cnnlstm.CNNLSTM(n,o),
@@ -26,6 +40,20 @@ _MODELS = {
     "lstm"    : lambda n,o: pacu.models.lstm.TorchLSTM(n,o),
     "siamese" : lambda n,o: pacu.models.siamese.SiameseNet(n,o)
 }
+
+_MODELS_SKLEARN = {
+    "rf"     : RandomForestClassifier(n_estimators=100, random_state=42),
+    "logreg" : LogisticRegression(max_iter=1000, random_state=42),
+    "svm"    : SVC(kernel='rbf', C=1.0, gamma='scale', random_state=42),
+    "gb"     : GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, random_state=42),
+    "nb"     : GaussianNB(),
+    "lgm"    : LGBMClassifier(random_state=42),
+    "xgb"    : XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42),
+    "knn"    : KNeighborsClassifier(n_neighbors=5),
+    "ada"    : AdaBoostClassifier(n_estimators=50, random_state=42)
+}
+
+_MODELS = list(_MODELS_TORCH.keys()) + list(_MODELS_SKLEARN.keys())
 
 _DATASET = {
     "siamese" : SiameseDataset
@@ -44,23 +72,39 @@ class Model:
     batch_size : int = 32
     device     : torch.device = field(init=False)
     model      : nn.Module    = field(init=False)
+    mode       : str          = field(init=False)
 
-    def __post_init__(self):
+
+    def _init_torch(self) -> None:
         dev = "cpu"
         if torch.cuda.is_available():
             dev = "cuda"
 
         self.device = torch.device(dev)
 
-        self.model  = _MODELS[self.model_name](self.input_dim, self.options).to(self.device)
+        self.model  = _MODELS_TORCH[self.model_name](self.input_dim, self.options).to(self.device)
         self.loader = DataLoader(
             _DATASET.get(self.model_name, TabularDataset)(self.x_train, self.y_train),
             batch_size = self.batch_size,
             shuffle=True
         )
 
+    
+    def _init_sklearn(self) -> None:
+        self.model = _MODELS_SKLEARN[self.model_name]
 
-    def train(self, epochs: int) -> None:
+
+    def __post_init__(self) -> None:
+
+        if self.model_name in _MODELS_SKLEARN:
+            self.mode = "sklearn"
+            self._init_sklearn()
+        else:
+            self.mode = "torch"
+            self._init_torch()
+
+
+    def _train_torch(self, epochs: int) -> None:
 
         criterion = nn.BCELoss()
         optimizer = optim.Adam(self.model.parameters(), lr=0.001)
@@ -84,7 +128,20 @@ class Model:
             print(f"[{self.model_name.upper()}][Epoch {epoch+1}] Loss: {total_loss:.4f}")
 
 
-    def accuracy(self) -> None:
+    def _train_sklearn(self) -> None:
+        print(f"[{self.model_name.upper()}] Training...")
+        self.model.fit(self.x_train, self.y_train)
+
+
+    def train(self, epochs: int) -> None:
+
+        if self.mode == "torch":
+            self._train_torch(epochs)
+        else:
+            self._train_sklearn()
+
+
+    def _accuracy_torch(self) -> None:
 
         self.model.eval()
         correct = 0
@@ -113,5 +170,18 @@ class Model:
                 total += labels.size(0)
 
         acc = correct / total
-        print(f"[{self.model_name.upper()}] Acurácia: {acc:.4f}")
+        print(f"[{self.model_name.upper()}] Accuracy: {acc:.4f}")
 
+
+    def _acurracy_sklearn(self) -> None:
+        y_pred = self.model.predict(self.x_test)
+        accuracy = accuracy_score(self.y_test, y_pred)
+        print(f"[{self.model_name.upper()}] Accuracy: {accuracy:.4f}")
+        #print(classification_report(self.y_test, y_pred))
+
+
+    def accuracy(self) -> None:
+        if self.mode == "torch":
+            self._accuracy_torch()
+        else:
+            self._acurracy_sklearn()
