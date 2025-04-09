@@ -6,7 +6,6 @@ import click
 
 from pacu.models.model import Model, _MODELS
 
-
 def _train_model(df: pd.DataFrame, model_name: str, options: dict) -> None:
 
     positives = df[df["label"] == 1]
@@ -92,7 +91,7 @@ def train(model: str, path: str, options: bool, layers: int, kernel_size: int, o
 
     if model == "all":
         for key in _MODELS.keys():
-            _train_model(df, key)
+            _train_model(df, key, {})
     else:
         _train_model(df, model, options_dict)
 
