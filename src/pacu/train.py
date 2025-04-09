@@ -6,7 +6,7 @@ import click
 
 from pacu.models.model import Model, _MODELS
 
-def _train_model(df: pd.DataFrame, model_name: str, options: dict) -> None:
+def _train_model(df: pd.DataFrame, model_name: str, epochs: int, options: dict) -> None:
 
     positives = df[df["label"] == 1]
     unlabeled = df[df["label"] != 1].copy()
@@ -30,7 +30,7 @@ def _train_model(df: pd.DataFrame, model_name: str, options: dict) -> None:
         options
     )
 
-    model.train(epochs=10)
+    model.train(epochs)
     model.accuracy()
 
 
@@ -70,7 +70,8 @@ def parse_layer_list(ctx, param, value):
 @click.option("--padding", type=int)
 @click.option("--hidden-dim", type=int)
 @click.option("--drop-features")
-def train(model: str, path: str, options: bool, layers: int, kernel_size: int, out_channels: int, padding: int, hidden_dim: int, drop_features: str) -> None:
+@click.option("--epochs", type=int, default=10)
+def train(model: str, path: str, options: bool, layers: int, kernel_size: int, out_channels: int, padding: int, hidden_dim: int, drop_features: str, epochs: int) -> None:
 
     df = pd.read_csv(path)
     df = _preprocess(df, drop_features) 
@@ -93,7 +94,7 @@ def train(model: str, path: str, options: bool, layers: int, kernel_size: int, o
 
     if model == "all":
         for key in _MODELS.keys():
-            _train_model(df, key, {})
+            _train_model(df, key, epochs, {})
     else:
-        _train_model(df, model, options_dict)
+        _train_model(df, model, epochs, options_dict)
 
