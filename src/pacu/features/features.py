@@ -9,6 +9,7 @@ def process_row(row: pd.Series) -> pd.Series:
     url_s = strip_url(url)
     fq = compute_frequencies(url_s)
     chardist = char_dist(url_s, fq)
+    bigdist = bigram_dist(url_s)
     return pd.Series({
         "url"               : url,
         "has_ip"            : has_ip(url),
@@ -24,6 +25,11 @@ def process_row(row: pd.Series) -> pd.Series:
         "eucli_char"        : euclidean_dist(url_s, chardist, frequency_char_ptbr),
         "cs_char"           : cheby_shev_dist(url_s, chardist, frequency_char_ptbr),
         "man_char"          : manhattan_dist(url_s, chardist, frequency_char_ptbr),
+        "ks_big"            : kolmogorov_smirnov(url_s, bigdist, frequency_bigram_unlabeled),
+        "kl_big"            : kullback_leibler(url_s, bigdist, frequency_bigram_unlabeled),
+        "eucli_big"         : euclidean_dist(url_s, bigdist, frequency_bigram_unlabeled),
+        "cs_big"            : cheby_shev_dist(url_s, bigdist, frequency_bigram_unlabeled),
+        "man_big"           : manhattan_dist(url_s, bigdist, frequency_bigram_unlabeled),
         "huffman"           : huffman(fq),
         "label"             : row["label"]
     })
