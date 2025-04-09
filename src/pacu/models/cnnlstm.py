@@ -32,7 +32,6 @@ class CNNLSTM(nn.Module):
 
         layers = utils.build_layers_cnn(options["layers"][1:])
         layers.pop()
-        print(layers)
         self.fc = nn.Sequential(*layers)
         self.sigmoid = nn.Sigmoid()
 
