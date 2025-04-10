@@ -35,7 +35,7 @@ def _train_model(df: pd.DataFrame, model_name: str, epochs: int, options: dict, 
     model.accuracy()
 
 
-def _preprocess(df: pd.DataFrame, drop: str) -> pd.DataFrame:
+def _preprocess(df: pd.DataFrame, drop: str, features: str) -> pd.DataFrame:
 
     bool_cols = df.select_dtypes(bool).columns
     df[bool_cols] = df[bool_cols].astype(int)
@@ -45,7 +45,9 @@ def _preprocess(df: pd.DataFrame, drop: str) -> pd.DataFrame:
     cols_to_normalize = df.columns.difference(["label", "has_ip", "has_port"])
     scaler = MinMaxScaler()
     df[cols_to_normalize] = scaler.fit_transform(df[cols_to_normalize])
-    if drop:
+    if features:
+        df = df[features.split(",")]
+    elif drop:
         df = df.drop(columns=drop.split(","))
 
     return df
@@ -73,10 +75,11 @@ def parse_layer_list(ctx, param, value):
 @click.option("--drop-features")
 @click.option("--epochs", type=int, default=10)
 @click.option("--batch-size", type=int, default=32)
-def train(model: str, path: str, options: bool, layers: int, kernel_size: int, out_channels: int, padding: int, hidden_dim: int, drop_features: str, epochs: int, batch_size: int) -> None:
+@click.option("--features")
+def train(model: str, path: str, options: bool, layers: int, kernel_size: int, out_channels: int, padding: int, hidden_dim: int, drop_features: str, epochs: int, batch_size: int, features: str) -> None:
 
     df = pd.read_csv(path)
-    df = _preprocess(df, drop_features) 
+    df = _preprocess(df, drop_features, features) 
     if model == "all" and options:
         pritn("--model all cannot be used together with --options") 
         exit(1)
