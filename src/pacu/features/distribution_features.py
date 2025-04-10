@@ -47,37 +47,25 @@ def bigram_dist(url: str) -> List[float]:
 
     return bigrams
 
-
-def check_float(f: float) -> bool:
-    return not (f <= sys.float_info.max and f >= sys.float_info.min)
-
 # Actual features 
 # Measures how different the two distributions are using the kolmogorov–smirnov test
 def kolmogorov_smirnov(url: str, calc_dist: list, dist: list) -> float:
     result = scipy.stats.ks_2samp(calc_dist, dist)
-    if check_float(result[0]):
-        print(f"ks url: {url} {result[0]} ")
     return result[0]
 
 # Computes the euclidean distance between two distributions
 def euclidean_dist(url: str, calc_dist: list, dist: list) -> float:
     result = scipy.spatial.distance.euclidean(calc_dist, dist)
-    if check_float(result):
-        print(f"ed url: {url} {result}")
     return result
 
 # Gets the largest individual difference between two distributions (chebyshev distance)
 def cheby_shev_dist(url: str, calc_dist: list, dist: list) -> float:
     result = scipy.spatial.distance.chebyshev(calc_dist, dist)
-    if check_float(result):
-        print(f"cbd url: {url} {result}")
     return result
 
 # Computes the total absolute difference between two distributions (manhattan distance)
 def manhattan_dist(url: str, calc_dist: list, dist: list) -> float:
     result = scipy.spatial.distance.cityblock(calc_dist, dist)
-    if check_float(result):
-        print(f"md url: {url} {result}")
     return result
 
 # Estimates the length of a Huffman encoding for the given character frequencies
