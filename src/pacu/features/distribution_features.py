@@ -10,7 +10,7 @@ _CHAR_SPACE = string.printable[:-6] # printable characters except whitespaces
 _CHAR_SPACE_LEN = len(_CHAR_SPACE)
 _CHAR_INDEX = {c: i for i, c in enumerate(_CHAR_SPACE)}
 
-
+# Return character frequencies in the given URL.
 def compute_frequencies(url: str) -> dict:
     return dict(collections.Counter(url))
 
@@ -48,26 +48,32 @@ def bigram_dist(url: str) -> List[float]:
 
 
 # Actual features 
+# Measures how different the two distributions are using the kolmogorov–smirnov test
 def kolmogorov_smirnov(url: str, calc_dist: list, dist: list) -> float:
     result = scipy.stats.ks_2samp(calc_dist, dist)
     return result[0]
 
+# Computes the kullback–leibler divergence between two distributions
 def kullback_leibler(url: str, calc_dist: list, dist: list) -> float:
     result = scipy.stats.entropy(calc_dist, dist)
     return result
 
+# Computes the euclidean distance between two distributions
 def euclidean_dist(url: str, calc_dist: list, dist: list) -> float:
     result = scipy.spatial.distance.euclidean(calc_dist, dist)
     return result
 
+# Gets the largest individual difference between two distributions (chebyshev distance)
 def cheby_shev_dist(url: str, calc_dist: list, dist: list) -> float:
     result = scipy.spatial.distance.chebyshev(calc_dist, dist)
     return result
 
+# Computes the total absolute difference between two distributions (manhattan distance)
 def manhattan_dist(url: str, calc_dist: list, dist: list) -> float:
     result = scipy.spatial.distance.cityblock(calc_dist, dist)
     return result
 
+# Estimates the length of a Huffman encoding for the given character frequencies
 def huffman(fq: dict) -> int:
     heap = list(fq.values())
     heapq.heapify(heap)
