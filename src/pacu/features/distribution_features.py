@@ -5,7 +5,6 @@ import string
 import scipy
 import collections
 import heapq
-import sys
 
 _CHAR_SPACE = string.printable[:-6] # printable characters except whitespaces
 _CHAR_SPACE_LEN = len(_CHAR_SPACE)
@@ -47,11 +46,17 @@ def bigram_dist(url: str) -> List[float]:
 
     return bigrams
 
+
 # Actual features 
 # Measures how different the two distributions are using the kolmogorov–smirnov test
 def kolmogorov_smirnov(url: str, calc_dist: list, dist: list) -> float:
     result = scipy.stats.ks_2samp(calc_dist, dist)
     return result[0]
+
+# Computes the kullback–leibler divergence between two distributions
+def kullback_leibler(url: str, calc_dist: list, dist: list) -> float:
+    result = scipy.stats.entropy(calc_dist, dist)
+    return result
 
 # Computes the euclidean distance between two distributions
 def euclidean_dist(url: str, calc_dist: list, dist: list) -> float:
