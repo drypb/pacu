@@ -45,5 +45,9 @@ def query_params_count(url: str) -> int:
 
 # Checks if the URL explicitly specifies a port number
 def has_port(url: str) -> bool:
-    port = urlparse(url).port
+    try:
+        port = urlparse(url).port
+    except ValueError:
+        return True
+
     return (port is not None)
