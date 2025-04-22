@@ -40,6 +40,16 @@ def _preprocess(df: pd.DataFrame, drop: str, features: str) -> pd.DataFrame:
     bool_cols = df.select_dtypes(bool).columns
     df[bool_cols] = df[bool_cols].astype(int)
 
+    max_kl_big = df[(df['kl_big'] != np.inf) & (df['kl_big'] != -np.inf)]['kl_big'].max()
+    max_kl_char = df[(df['kl_char'] != np.inf) & (df['kl_char'] != -np.inf)]['kl_char'].max()
+    min_kl_big = df[(df['kl_big'] != np.inf) & (df['kl_big'] != -np.inf)]['kl_big'].min()
+    min_kl_char = df[(df['kl_char'] != np.inf) & (df['kl_char'] != -np.inf)]['kl_char'].min()
+
+    df["kl_big"] = df["kl_big"].replace(np.inf, min(2*max_kl_big, sys.float_info.max))
+    df["kl_char"] = df["kl_char"].replace(np.inf, min(2*max_kl_char, sys.float_info.max))
+    df["kl_big"] = df["kl_big"].replace(np.inf, max(2*min_kl_big, sys.float_info.min))
+    df["kl_char"] = df["kl_char"].replace(np.inf, max(2*min_kl_char, sys.float_info.min))
+
     df = df.drop_duplicates()
     df = df.drop(columns=["url"]) 
     cols_to_normalize = df.columns.difference(["label", "has_ip", "has_port"])
