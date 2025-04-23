@@ -11,7 +11,6 @@ def process_row(row: pd.Series) -> pd.Series:
     chardist = char_dist(url_s, fq)
     bigdist = bigram_dist(url_s)
     return pd.Series({
-        "url"               : url,
         "has_ip"            : has_ip(url),
         "number_count"      : number_count(url),
         "dash_symbol_count" : dash_symbol_count(url),
