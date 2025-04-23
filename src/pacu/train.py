@@ -53,7 +53,6 @@ def _preprocess(df: pd.DataFrame, drop: str, features: str) -> pd.DataFrame:
     df["kl_char"] = df["kl_char"].replace(np.inf, max(2*min_kl_char, sys.float_info.min))
 
     df = df.drop_duplicates()
-    df = df.drop(columns=["url"]) 
     cols_to_normalize = df.columns.difference(["label", "has_ip", "has_port"])
     scaler = MinMaxScaler()
     df[cols_to_normalize] = scaler.fit_transform(df[cols_to_normalize])
