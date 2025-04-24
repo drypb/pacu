@@ -1,17 +1,21 @@
 
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier, BaggingClassifier, ExtraTreesClassifier
+from cuml.ensemble import RandomForestClassifier
+from cuml.linear_model import LogisticRegression
+from cuml.svm import SVC
+from cuml.naive_bayes import GaussianNB
+from cuml.neighbors import KNeighborsClassifier
+from cuml.model_selection import train_test_split
+from cuml.preprocessing import MinMaxScaler
+
+from sklearn.ensemble import GradientBoostingClassifier, AdaBoostClassifier, BaggingClassifier, ExtraTreesClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from sklearn.naive_bayes import GaussianNB
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import accuracy_score, classification_report
-from xgboost import XGBClassifier
+from sklearn.metrics import classification_report, accuracy_score  
+from sklearn.tree import DecisionTreeClassifier
+
+from xgboost import XGBClassifier  
 from lightgbm import LGBMClassifier
+
 
 from dataclasses import *
 from typing import *
