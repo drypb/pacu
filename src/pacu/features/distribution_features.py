@@ -38,13 +38,15 @@ def bigram_dist(url: str) -> List[float]:
     url_len = len(url)
     total_bigrams = url_len - 1
     bigrams = [0.0] * (_CHAR_SPACE_LEN**2)
+    bigram_presence = [0] * (_CHAR_SPACE_LEN**2)
     distribution_unit = 1/total_bigrams
  
     for i in range(total_bigrams):
         idx = _CHAR_INDEX[url[i]] * _CHAR_SPACE_LEN + _CHAR_INDEX[url[i + 1]]
         bigrams[idx] += distribution_unit
+        bigram_presence[idx] = 1 
 
-    return bigrams
+    return bigrams, bigram_presence
 
 
 # Actual features 
