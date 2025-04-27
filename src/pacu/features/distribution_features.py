@@ -33,7 +33,7 @@ def char_dist(url: str, freqs: list) -> list:
 
 
 # distribution_unit = 1/(len(url)-1)
-def bigram_dist(url: str) -> List[float]:
+def bigram_dist(url: str) -> Tuple[List[float], List[int]]:
 
     url_len = len(url)
     total_bigrams = url_len - 1
