@@ -4,6 +4,8 @@ from pacu.features.distributions import *
 
 import pandas as pd
 
+CHAR_SPACE = string.printable[:-6]
+
 # TODO make this configurable
 normal_bigram_dist = bigram_distribution_br
 normal_char_dist = char_distribution_br
@@ -13,8 +15,9 @@ def process_row(row: pd.Series) -> pd.Series:
     url_s = strip_url(url)
     fq = compute_frequencies(url_s)
     chardist = char_dist(url_s, fq)
-    bigdist = bigram_dist(url_s)
-    return pd.Series({
+    bigdist, bigram_presence = bigram_dist(url_s)
+
+    features ={
         "has_ip"            : has_ip(url),
         "number_count"      : number_count(url),
         "dash_symbol_count" : dash_symbol_count(url),
@@ -35,7 +38,15 @@ def process_row(row: pd.Series) -> pd.Series:
         "man_big"           : manhattan_dist(url_s, bigdist, normal_bigram_dist),
         "huffman"           : huffman(fq),
         "label"             : row["label"]
-    })
+    }
+
+    for i, j in enumerate(bigram_presence):
+        idx1 = i // len(CHAR_SPACE)
+        idx2 = i % len(CHAR_SPACE)
+        big = CHAR_SPACE[idx1] + CHAR_SPACE[idx2]
+        features.update({big:j})
+
+    return pd.Series(features)
 
 
 def extract_features(df: pd.DataFrame) -> pd.DataFrame:
