@@ -72,50 +72,100 @@ def test_char_dist():
 
 def test_bigram_dist():
     # teste 1
-    tmp = bigram_dist(strip_url("https://abc.com"))
-    assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 6)
-    assert tmp[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == (1 / 6)
-    assert tmp[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['.']] == (1 / 6)
-    assert tmp[_CHAR_INDEX['.'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == (1 / 6)
-    assert tmp[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['o']] == (1 / 6)
-    assert tmp[_CHAR_INDEX['o'] * _CHAR_SPACE_LEN + _CHAR_INDEX['m']] == (1 / 6)
-    assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['a']] == 0
-    assert tmp[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == 0
-    assert tmp[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == 0
+    bigrams, bigram_presence = bigram_dist(strip_url("https://abc.com"))
+    assert bigrams[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 6)
+    assert bigrams[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == (1 / 6)
+    assert bigrams[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['.']] == (1 / 6)
+    assert bigrams[_CHAR_INDEX['.'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == (1 / 6)
+    assert bigrams[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['o']] == (1 / 6)
+    assert bigrams[_CHAR_INDEX['o'] * _CHAR_SPACE_LEN + _CHAR_INDEX['m']] == (1 / 6)
+    assert bigrams[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['a']] == 0
+    assert bigrams[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == 0
+    assert bigrams[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == 0
 
-    assert len(tmp) == _CHAR_SPACE_LEN ** 2
-    assert abs(sum(tmp) - 1.0) < 1e-6
-    for value in tmp:
+    assert bigram_presence[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == 1
+    assert bigram_presence[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == 1
+    assert bigram_presence[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['.']] == 1
+    assert bigram_presence[_CHAR_INDEX['.'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == 1
+    assert bigram_presence[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['o']] == 1
+    assert bigram_presence[_CHAR_INDEX['o'] * _CHAR_SPACE_LEN + _CHAR_INDEX['m']] == 1
+    assert bigram_presence[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['a']] == 0
+    assert bigram_presence[_CHAR_INDEX['x'] * _CHAR_SPACE_LEN + _CHAR_INDEX['y']] == 0
+    assert bigram_presence[_CHAR_INDEX['y'] * _CHAR_SPACE_LEN + _CHAR_INDEX['z']] == 0
+    assert bigram_presence[_CHAR_INDEX['z'] * _CHAR_SPACE_LEN + _CHAR_INDEX['x']] == 0
+
+    assert len(bigrams) == _CHAR_SPACE_LEN ** 2
+    assert abs(sum(bigrams) - 1.0) < 1e-6
+    for value in bigrams:
         assert 0.0 <= value <= 1.0
+
+    assert len(bigram_presence) == _CHAR_SPACE_LEN ** 2
+    assert sum(bigram_presence) <= _CHAR_SPACE_LEN ** 2
+    for value in bigram_presence:
+        assert value in (0, 1)
 
     # teste 2
-    tmp = bigram_dist(strip_url("http://aaa.com"))
-    assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['a']] == (2 / 6)
+    bigrams, bigram_presence = bigram_dist(strip_url("http://aaa.com"))
+    assert bigrams[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['a']] == (2 / 6)
+    assert bigram_presence[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['a']] == 1
+    assert bigram_presence[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == 0
+    assert bigram_presence[_CHAR_INDEX['c'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == 0
+    assert bigram_presence[_CHAR_INDEX['x'] * _CHAR_SPACE_LEN + _CHAR_INDEX['y']] == 0
 
-    assert len(tmp) == _CHAR_SPACE_LEN ** 2
-    assert abs(sum(tmp) - 1.0) < 1e-6
-    for value in tmp:
+    assert len(bigrams) == _CHAR_SPACE_LEN ** 2
+    assert abs(sum(bigrams) - 1.0) < 1e-6
+    for value in bigrams:
         assert 0.0 <= value <= 1.0
+
+    assert len(bigram_presence) == _CHAR_SPACE_LEN ** 2
+    assert sum(bigram_presence) <= _CHAR_SPACE_LEN ** 2
+    for value in bigram_presence:
+        assert value in (0, 1)
 
     # teste 3
-    tmp = bigram_dist(strip_url("https://abcABC.com"))
-    assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 9)
-    assert tmp[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == (1 / 9)
-    assert tmp[_CHAR_INDEX['A'] * _CHAR_SPACE_LEN + _CHAR_INDEX['B']] == (1 / 9)
-    assert tmp[_CHAR_INDEX['B'] * _CHAR_SPACE_LEN + _CHAR_INDEX['C']] == (1 / 9)
+    bigrams, bigram_presence = bigram_dist(strip_url("https://abcABC.com"))
+    assert bigrams[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 9)
+    assert bigrams[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == (1 / 9)
+    assert bigrams[_CHAR_INDEX['A'] * _CHAR_SPACE_LEN + _CHAR_INDEX['B']] == (1 / 9)
+    assert bigrams[_CHAR_INDEX['B'] * _CHAR_SPACE_LEN + _CHAR_INDEX['C']] == (1 / 9)
 
-    assert len(tmp) == _CHAR_SPACE_LEN ** 2
-    assert abs(sum(tmp) - 1.0) < 1e-6
-    for value in tmp:
+    assert bigram_presence[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == 1
+    assert bigram_presence[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['c']] == 1
+    assert bigram_presence[_CHAR_INDEX['A'] * _CHAR_SPACE_LEN + _CHAR_INDEX['B']] == 1
+    assert bigram_presence[_CHAR_INDEX['B'] * _CHAR_SPACE_LEN + _CHAR_INDEX['C']] == 1
+    assert bigram_presence[_CHAR_INDEX['x'] * _CHAR_SPACE_LEN + _CHAR_INDEX['y']] == 0
+    assert bigram_presence[_CHAR_INDEX['y'] * _CHAR_SPACE_LEN + _CHAR_INDEX['z']] == 0
+    assert bigram_presence[_CHAR_INDEX['z'] * _CHAR_SPACE_LEN + _CHAR_INDEX['x']] == 0
+
+    assert len(bigrams) == _CHAR_SPACE_LEN ** 2
+    assert abs(sum(bigrams) - 1.0) < 1e-6
+    for value in bigrams:
         assert 0.0 <= value <= 1.0
+
+    assert len(bigram_presence) == _CHAR_SPACE_LEN ** 2
+    assert sum(bigram_presence) <= _CHAR_SPACE_LEN ** 2
+    for value in bigram_presence:
+        assert value in (0, 1)
 
     # teste 4
-    tmp = bigram_dist(strip_url("http://a.br"))
-    assert tmp[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['.']] == (1 / 3)
-    assert tmp[_CHAR_INDEX['.'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 3)
-    assert tmp[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['r']] == (1 / 3)
+    bigrams, bigram_presence = bigram_dist(strip_url("http://a.br"))
+    assert bigrams[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['.']] == (1 / 3)
+    assert bigrams[_CHAR_INDEX['.'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == (1 / 3)
+    assert bigrams[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['r']] == (1 / 3)
 
-    assert len(tmp) == _CHAR_SPACE_LEN ** 2
-    assert abs(sum(tmp) - 1.0) < 1e-6
-    for value in tmp:
+    assert bigram_presence[_CHAR_INDEX['a'] * _CHAR_SPACE_LEN + _CHAR_INDEX['.']] == 1
+    assert bigram_presence[_CHAR_INDEX['.'] * _CHAR_SPACE_LEN + _CHAR_INDEX['b']] == 1
+    assert bigram_presence[_CHAR_INDEX['b'] * _CHAR_SPACE_LEN + _CHAR_INDEX['r']] == 1
+    assert bigram_presence[_CHAR_INDEX['x'] * _CHAR_SPACE_LEN + _CHAR_INDEX['y']] == 0
+    assert bigram_presence[_CHAR_INDEX['y'] * _CHAR_SPACE_LEN + _CHAR_INDEX['z']] == 0
+    assert bigram_presence[_CHAR_INDEX['z'] * _CHAR_SPACE_LEN + _CHAR_INDEX['x']] == 0
+
+    assert len(bigrams) == _CHAR_SPACE_LEN ** 2
+    assert abs(sum(bigrams) - 1.0) < 1e-6
+    for value in bigrams:
         assert 0.0 <= value <= 1.0
+
+    assert len(bigram_presence) == _CHAR_SPACE_LEN ** 2
+    assert sum(bigram_presence) <= _CHAR_SPACE_LEN ** 2
+    for value in bigram_presence:
+        assert value in (0, 1)
