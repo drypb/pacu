@@ -51,9 +51,7 @@ def normalize_kullback_leibler(df: pd.DataFrame) -> None:
 
 def randomize(df: pd.DataFrame, random: str) -> None:
 
-    new_column = np.random.rand(1,len(df[random].values))
-
-    new_column.reshape(-1,1)
+    new_column = np.random.rand(len(df[random].values),1)
     
     df[random] = new_column
 
@@ -67,6 +65,9 @@ def _preprocess(df: pd.DataFrame, drop: str, features: str, random: str) -> pd.D
 
     if random != None:
         randomize(df,random)
+
+    if "url" in df.columns:
+        df = df.drop(columns=["url"])
 
     df = df.drop_duplicates()
     cols_to_normalize = df.columns.difference(["label", "has_ip", "has_port"])
