@@ -37,10 +37,7 @@ def _train_model(df: pd.DataFrame, model_name: str, epochs: int, options: dict, 
     model.accuracy()
 
 
-def _preprocess(df: pd.DataFrame, drop: str, features: str) -> pd.DataFrame:
-
-    bool_cols = df.select_dtypes(bool).columns
-    df[bool_cols] = df[bool_cols].astype(int)
+def normalize_kullback_leibler(df: pd.DataFrame) -> None:
 
     max_kl_big = df[(df['kl_big'] != np.inf) & (df['kl_big'] != -np.inf)]['kl_big'].max()
     max_kl_char = df[(df['kl_char'] != np.inf) & (df['kl_char'] != -np.inf)]['kl_char'].max()
@@ -51,6 +48,25 @@ def _preprocess(df: pd.DataFrame, drop: str, features: str) -> pd.DataFrame:
     df["kl_char"] = df["kl_char"].replace(np.inf, min(2*max_kl_char, sys.float_info.max))
     df["kl_big"] = df["kl_big"].replace(np.inf, max(2*min_kl_big, sys.float_info.min))
     df["kl_char"] = df["kl_char"].replace(np.inf, max(2*min_kl_char, sys.float_info.min))
+
+def randomize(df: pd.DataFrame, random: str) -> None:
+
+    new_column = np.random.rand(1,len(df[random].values))
+
+    new_column.reshape(-1,1)
+    
+    df[random] = new_column
+
+def _preprocess(df: pd.DataFrame, drop: str, features: str, random: str) -> pd.DataFrame:
+
+    bool_cols = df.select_dtypes(bool).columns
+    df[bool_cols] = df[bool_cols].astype(int)
+
+    if "kl_big" in df.columns:
+        normalize_kullback_leibler(df)
+
+    if random != None:
+        randomize(df,random)
 
     df = df.drop_duplicates()
     cols_to_normalize = df.columns.difference(["label", "has_ip", "has_port"])
@@ -87,10 +103,11 @@ def parse_layer_list(ctx, param, value):
 @click.option("--epochs", type=int, default=10)
 @click.option("--batch-size", type=int, default=32)
 @click.option("--features")
-def train(model: str, path: str, options: bool, layers: int, kernel_size: int, out_channels: int, padding: int, hidden_dim: int, drop_features: str, epochs: int, batch_size: int, features: str) -> None:
+@click.option("--random")
+def train(model: str, path: str, options: bool, layers: int, kernel_size: int, out_channels: int, padding: int, hidden_dim: int, drop_features: str, epochs: int, batch_size: int, features: str, random: str) -> None:
 
     df = pd.read_csv(path)
-    df = _preprocess(df, drop_features, features) 
+    df = _preprocess(df, drop_features, features, random) 
     if model == "all" and options:
         pritn("--model all cannot be used together with --options") 
         exit(1)
